@@ -92,7 +92,7 @@ class UserController extends Controller
         $validatedData = $request->validate(
             [
                 'name'     => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users,email,' . $user->id,
+                'email' => 'required|email|max:255|unique:users,email,' . $user->id,//игнор user существующего email
             ],
             [
                 // Сообщения для поля name
