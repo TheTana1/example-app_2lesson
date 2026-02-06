@@ -2,15 +2,28 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserStoreRequest;
+use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
+use App\Repository\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
+    private UserRepository $userRepository;
+
     /**
      * Display a listing of the resource.
      */
+
+    public function __construct(
+        UserRepository $userRepository
+    )
+    {
+        $this->userRepository = $userRepository;
+    }
+
     public function index()
     {
         $users = User::query()->paginate(10);
@@ -31,39 +44,13 @@ class UserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(UserStoreRequest $userStoreRequest)
     {
-        $validatedData = $request->validate(
-            [
-                'name'     => 'required|max:255',
-                'email'    => 'required|email|max:255|unique:users',
-                'password' => 'required|min:6|confirmed',
-            ],
-            [
-                // Сообщения для поля name
-                'name.required'    => 'Поле "Имя" обязательно для заполнения.',
-                'name.max'         => 'Имя не может быть длиннее 255 символов.',
 
-                // Сообщения для поля email
-                'email.required'   => 'Поле "Email" обязательно для заполнения.',
-                'email.email'      => 'Введите корректный адрес электронной почты.',
-                'email.max'        => 'Email не может быть длиннее 255 символов.',
-                'email.unique'     => 'Пользователь с таким email уже зарегистрирован.',
-
-                // Сообщения для поля password
-                'password.required'    => 'Поле "Пароль" обязательно для заполнения.',
-                'password.min'         => 'Пароль должен содержать минимум 6 символов.',
-                'password.confirmed'   => 'Пароли не совпадают.',
-            ]
+        return redirect()->route(
+            'users.show',
+            $this->userRepository->store($userStoreRequest)
         );
-
-        $newUser = new User;
-        $newUser->name = $validatedData['name'];
-        $newUser->email = $validatedData['email'];
-        $newUser->password = Hash::make($validatedData['password']);
-        $newUser->save();
-
-        return redirect()->route('users.show', $newUser->id);
     }
 
     /**
@@ -87,41 +74,11 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, User $user)
+    public function update(UserUpdateRequest $userUpdateRequest, User $user)
     {
-        $validatedData = $request->validate(
-            [
-                'name'     => 'required|max:255',
-                'email' => 'required|email|max:255|unique:users,email,' . $user->id,//игнор user существующего email
-            ],
-            [
-                // Сообщения для поля name
-                'name.required'    => 'Поле "Имя" обязательно для заполнения.',
-                'name.max'         => 'Имя не может быть длиннее 255 символов.',
+        return redirect()->back()->with($this->userRepository->update($userUpdateRequest, $user))->
+        with('success', 'Пользователь удачно обновлён');
 
-                // Сообщения для поля email
-                'email.required'   => 'Поле "Email" обязательно для заполнения.',
-                'email.email'      => 'Введите корректный адрес электронной почты.',
-                'email.max'        => 'Email не может быть длиннее 255 символов.',
-                'email.unique'     => 'Пользователь с таким email уже зарегистрирован.',
-
-                // Сообщения для поля password
-                'password.min'         => 'Пароль должен содержать минимум 6 символов.',
-                'password.confirmed'   => 'Пароли не совпадают.',
-            ]
-        );
-        $user['name'] = $validatedData['name'];
-        $user-> email = $validatedData['email'];
-
-        //проверка на заполнение поля password
-        if ($request->filled('password')) {
-            $validatedData['password'] = 'confirmed|min:6';
-            $user['password'] = Hash::make($validatedData['password']);
-        }
-
-        $user->save();
-
-        return redirect()->route('users.show', $user->id);
     }
 
     /**
@@ -129,7 +86,7 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        $user->delete();
-        return redirect()->route('users.index');
+        return redirect()->back()->with($this->userRepository->destroy($user));
+
     }
 }

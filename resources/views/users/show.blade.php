@@ -1,6 +1,116 @@
 @extends('layouts.app')
 @section('content')
         <div class="container mx-auto px-4 py-8 max-w-3xl">
+            @if(session()->has('success'))
+                <div class="alert-message success animate__animated animate__fadeInDown">
+                    <div class="alert-content">
+                        <div class="alert-icon">
+                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
+                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+                            </svg>
+                        </div>
+                        <div class="alert-text">
+                            <h4>Успешно!</h4>
+                            <p>{{ session('success') }}</p>
+                        </div>
+                        <button class="alert-close" onclick="this.parentElement.style.display='none'">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+            @endif
+
+            <style>
+                .alert-message {
+                    position: relative;
+                    margin: 1rem 0;
+                    border-radius: 12px;
+                    overflow: hidden;
+                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+                }
+
+                .alert-message.success {
+                    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+                    border-left: 5px solid #28a745;
+                }
+
+                .alert-content {
+                    display: flex;
+                    align-items: center;
+                    padding: 1.25rem;
+                    gap: 1rem;
+                }
+
+                .alert-icon {
+                    flex-shrink: 0;
+                    width: 50px;
+                    height: 50px;
+                }
+
+                .checkmark__circle {
+                    stroke-dasharray: 166;
+                    stroke-dashoffset: 166;
+                    stroke-width: 2;
+                    stroke-miterlimit: 10;
+                    stroke: #28a745;
+                    fill: none;
+                    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+                }
+
+                .checkmark__check {
+                    transform-origin: 50% 50%;
+                    stroke-dasharray: 48;
+                    stroke-dashoffset: 48;
+                    stroke: #28a745;
+                    stroke-width: 3;
+                    stroke-linecap: round;
+                    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+                }
+
+                @keyframes stroke {
+                    100% {
+                        stroke-dashoffset: 0;
+                    }
+                }
+
+                .alert-text {
+                    flex-grow: 1;
+                }
+
+                .alert-text h4 {
+                    margin: 0 0 5px 0;
+                    color: #155724;
+                    font-weight: 600;
+                }
+
+                .alert-text p {
+                    margin: 0;
+                    color: #155724;
+                    opacity: 0.9;
+                }
+
+                .alert-close {
+                    background: none;
+                    border: none;
+                    color: #155724;
+                    opacity: 0.6;
+                    cursor: pointer;
+                    transition: opacity 0.3s;
+                    padding: 5px;
+                    border-radius: 50%;
+                    width: 30px;
+                    height: 30px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+
+                .alert-close:hover {
+                    opacity: 1;
+                    background: rgba(0,0,0,0.05);
+                }
+            </style>
 
             <!-- Header -->
             <div class="mb-8">
