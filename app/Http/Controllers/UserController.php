@@ -6,8 +6,8 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repository\UserRepository;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
+
 
 class UserController extends Controller
 {
@@ -50,10 +50,10 @@ class UserController extends Controller
     public function store(UserStoreRequest $userStoreRequest)
     {
 
-        return redirect()->route(
-            'users.show',
-            $this->userRepository->store($userStoreRequest)
-        );
+        //$user = User::query()->create($userStoreRequest->validated());
+
+        return redirect()->route('users.show',
+            $this->userRepository->store($userStoreRequest));
     }
 
     /**
@@ -61,26 +61,29 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-       return view('users.show', [
-           'user' => $user,
-       ]);
+
+        return view('users.show', [
+            'user' => $user,
+        ]);
+    }
+    public function edit(User $user)
+    {
+        return view('users.edit', [
+            'user' => $user,
+        ]);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      */
     public function update(UserUpdateRequest $userUpdateRequest, User $user)
     {
-        return redirect()->back()->with($this->userRepository->update($userUpdateRequest, $user))->
-        with('success', 'Пользователь удачно обновлён');
+        return redirect()->
+        route('users.show',
+            $this->userRepository->
+            update($userUpdateRequest, $user))->
+            with('success', 'Пользователь удачно обновлён');
 
     }
 
@@ -89,7 +92,13 @@ class UserController extends Controller
      */
     public function destroy(User $user)
     {
-        return redirect()->back()->with($this->userRepository->destroy($user));
+        $userRemoveResult = $this->userRepository->destroy($user);
+        if($userRemoveResult){
+            return redirect()->route('users.index')->
+            with('success',  'Пользователь удалён');
+        }
+        return redirect()->route('users.index')->
+            withErrors('error', 'Пользователь не найден');
 
     }
 }

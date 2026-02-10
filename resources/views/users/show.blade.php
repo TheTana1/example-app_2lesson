@@ -1,248 +1,391 @@
 @extends('layouts.app')
+
 @section('content')
-        <div class="container mx-auto px-4 py-8 max-w-3xl">
-            @if(session()->has('success'))
-                <div class="alert-message success animate__animated animate__fadeInDown">
-                    <div class="alert-content">
-                        <div class="alert-icon">
-                            <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
-                                <circle class="checkmark__circle" cx="26" cy="26" r="25" fill="none"/>
-                                <path class="checkmark__check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
-                            </svg>
-                        </div>
-                        <div class="alert-text">
-                            <h4>Успешно!</h4>
-                            <p>{{ session('success') }}</p>
-                        </div>
-                        <button class="alert-close" onclick="this.parentElement.style.display='none'">
-                            <i class="fas fa-times"></i>
-                        </button>
-                    </div>
+    <div class="container mx-auto px-4 py-8 max-w-5xl">
+
+        <!-- Header -->
+        <div class="mb-8">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                        Профиль пользователя
+                    </h1>
+                    <p class="mt-2 text-gray-600 dark:text-gray-400">
+                        Просмотр и управление профилем
+                    </p>
                 </div>
-            @endif
 
-            <style>
-                .alert-message {
-                    position: relative;
-                    margin: 1rem 0;
-                    border-radius: 12px;
-                    overflow: hidden;
-                    box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-                }
+                <div class="flex items-center space-x-3">
+                    <a href="{{ route('users.edit', $user) }}"
+                       class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700
+                              text-white font-medium rounded-lg transition-colors">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                        </svg>
+                        Редактировать
+                    </a>
 
-                .alert-message.success {
-                    background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
-                    border-left: 5px solid #28a745;
-                }
-
-                .alert-content {
-                    display: flex;
-                    align-items: center;
-                    padding: 1.25rem;
-                    gap: 1rem;
-                }
-
-                .alert-icon {
-                    flex-shrink: 0;
-                    width: 50px;
-                    height: 50px;
-                }
-
-                .checkmark__circle {
-                    stroke-dasharray: 166;
-                    stroke-dashoffset: 166;
-                    stroke-width: 2;
-                    stroke-miterlimit: 10;
-                    stroke: #28a745;
-                    fill: none;
-                    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
-                }
-
-                .checkmark__check {
-                    transform-origin: 50% 50%;
-                    stroke-dasharray: 48;
-                    stroke-dashoffset: 48;
-                    stroke: #28a745;
-                    stroke-width: 3;
-                    stroke-linecap: round;
-                    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
-                }
-
-                @keyframes stroke {
-                    100% {
-                        stroke-dashoffset: 0;
-                    }
-                }
-
-                .alert-text {
-                    flex-grow: 1;
-                }
-
-                .alert-text h4 {
-                    margin: 0 0 5px 0;
-                    color: #155724;
-                    font-weight: 600;
-                }
-
-                .alert-text p {
-                    margin: 0;
-                    color: #155724;
-                    opacity: 0.9;
-                }
-
-                .alert-close {
-                    background: none;
-                    border: none;
-                    color: #155724;
-                    opacity: 0.6;
-                    cursor: pointer;
-                    transition: opacity 0.3s;
-                    padding: 5px;
-                    border-radius: 50%;
-                    width: 30px;
-                    height: 30px;
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                }
-
-                .alert-close:hover {
-                    opacity: 1;
-                    background: rgba(0,0,0,0.05);
-                }
-            </style>
-
-            <!-- Header -->
-            <div class="mb-8">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-                            Редактирование пользователя
-                        </h1>
-                        <p class="mt-2 text-gray-600 dark:text-gray-400">
-                            Изменение данных: {{ $user->name }}
-                        </p>
-                    </div>
-
-                    <a href="{{ route('users.index') }}"
+                    <a href="{{ url()->previous() }}"
                        class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700
-                          hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
-                          font-medium rounded-lg transition-colors">
+                              hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
+                              font-medium rounded-lg transition-colors">
                         ← Назад к списку
                     </a>
                 </div>
             </div>
+        </div>
 
-            <!-- Card -->
-            <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+        <!-- Flash сообщения -->
+        @if(session()->has('success'))
+            <div class="mb-6 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800
+                        rounded-lg text-green-700 dark:text-green-400">
+                <div class="flex items-center">
+                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                        <path fill-rule="evenodd"
+                              d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    {{ session('success') }}
+                </div>
+            </div>
+        @endif
 
-                <div class="p-6 sm:p-8">
+        <!-- Основная карточка -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
-                    <form method="POST" action="{{ route('users.update', $user) }}">
-                        @csrf
-                        @method('PUT')
+            <!-- Левая колонка - Аватар и основная информация -->
+            <div class="lg:col-span-1">
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
 
-                        <div class="space-y-6">
+                    <!-- Аватар -->
+                    <div class="flex flex-col items-center mb-6">
+                        <div class="relative mb-4">
 
-                            <!-- Аватар + имя -->
-                            <div class="flex flex-col sm:flex-row sm:items-center gap-6">
-                                <div class="flex-shrink-0">
-                                    <div class="h-20 w-20 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600
-                                            flex items-center justify-center text-white font-bold text-3xl shadow-md">
-                                        {{ strtoupper(substr($user->name, 0, 1)) }}
-                                    </div>
+                            @if($user->avatar && Storage::disk('public')->exists('/avatars/'.basename($user->avatar->path)))
+
+                                <div class="h-48 w-48 rounded-full overflow-hidden border-4 border-white dark:border-gray-700 shadow-xl">
+                                    <img src="{{ asset($user->avatar->path) }}"
+{{--                                    <img src="{{ Storage::disk('public')->url('/avatars/'.basename($user->avatar->path)) }}"--}}
+                                         alt="{{ $user->name }}"
+                                         class="w-full h-full object-cover">
                                 </div>
-                                <div class="flex-1">
-                                    <label for="name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                        Имя пользователя
-                                    </label>
-                                    <input type="text"
-                                           name="name"
-                                           id="name"
-                                           value="{{ old('name', $user->name) }}"
-                                           class="block w-full rounded-lg border-gray-300 dark:border-gray-600
-                                              dark:bg-gray-700 dark:text-white shadow-sm
-                                              focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2.5
-                                              @error('name') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
+                            @else
+                                <!-- Дефолтный аватар с первой буквой имени -->
+                                <div class="h-48 w-48 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600
+                                            flex items-center justify-center text-white font-bold text-5xl shadow-xl
+                                            border-4 border-white dark:border-gray-700">
+                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                </div>
+                            @endif
 
-                                    @error('name')
-                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                    @enderror
+                            <!-- Статус онлайн/офлайн -->
+                            <div class="absolute bottom-4 right-4">
+                                <div class="h-6 w-6 rounded-full bg-green-500 border-2 border-white dark:border-gray-800
+                                            {{ $user->last_seen && $user->last_seen->gt(now()->subMinutes(5)) ? 'bg-green-500' : 'bg-gray-400' }}"
+                                     title="{{ $user->last_seen && $user->last_seen->gt(now()->subMinutes(5)) ? 'Online' : 'Offline' }}">
                                 </div>
                             </div>
-
-                            <!-- Email -->
-                            <div>
-                                <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Email
-                                </label>
-                                <input type="email"
-                                       name="email"
-                                       id="email"
-                                       value="{{ old('email', $user->email) }}"
-                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600
-                                          dark:bg-gray-700 dark:text-white shadow-sm
-                                          focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2.5
-                                          @error('email') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-
-                                @error('email')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Пароль (опционально) -->
-                            <div>
-                                <label for="password" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Новый пароль <span class="text-gray-500 dark:text-gray-400 text-xs">(оставьте пустым, если не меняете)</span>
-                                </label>
-                                <input type="password"
-                                       name="password"
-                                       id="password"
-                                       autocomplete="new-password"
-                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600
-                                          dark:bg-gray-700 dark:text-white shadow-sm
-                                          focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2.5
-                                          @error('password') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
-
-                                @error('password')
-                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                @enderror
-                            </div>
-
-                            <!-- Подтверждение пароля -->
-                            <div>
-                                <label for="password_confirmation" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Подтверждение пароля
-                                </label>
-                                <input type="password"
-                                       name="password_confirmation"
-                                       id="password_confirmation"
-                                       class="block w-full rounded-lg border-gray-300 dark:border-gray-600
-                                          dark:bg-gray-700 dark:text-white shadow-sm
-                                          focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2.5">
-                            </div>
-
-                            <!-- Кнопки -->
-                            <div class="flex items-center justify-end gap-4 pt-6 border-t border-gray-200 dark:border-gray-700">
-                                <a href="{{ route('users.index') }}"
-                                   class="px-5 py-2.5 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600
-                                      text-gray-800 dark:text-gray-200 font-medium rounded-lg transition">
-                                    Отмена
-                                </a>
-
-                                <button type="submit"
-                                        class="inline-flex items-center px-6 py-2.5 bg-indigo-600 hover:bg-indigo-700
-                                           text-white font-medium rounded-lg shadow-md transition-all duration-200
-                                           focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                    Сохранить изменения
-                                </button>
-                            </div>
-
                         </div>
-                    </form>
 
+                        <h2 class="text-2xl font-bold text-gray-900 dark:text-white">{{ $user->name }}</h2>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">{{ $user->email }}</p>
+
+                        <!-- Роль пользователя -->
+{{--                        @if($user->role)--}}
+{{--                            <div class="mt-3">--}}
+{{--                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium--}}
+{{--                                           {{ $user->role === 'admin' ? 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300' :--}}
+{{--                                              $user->role === 'manager' ? 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300' :--}}
+{{--                                              'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300' }}">--}}
+{{--                                    {{ ucfirst($user->role) }}--}}
+{{--                                </span>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
+                    </div>
+
+                    <!-- Статистика -->
+                    <div class="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Статистика</h3>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+                                    {{ $user->posts_count ?? 0 }}
+                                </div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Постов</div>
+                            </div>
+
+                            <div class="text-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                                <div class="text-2xl font-bold text-green-600 dark:text-green-400">
+                                    {{ $user->comments_count ?? 0 }}
+                                </div>
+                                <div class="text-sm text-gray-600 dark:text-gray-400 mt-1">Комментариев</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Информация о создании -->
+                <div class="mt-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">Информация</h3>
+
+                    <div class="space-y-3">
+                        <div class="flex items-center text-gray-600 dark:text-gray-400">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                            </svg>
+                            <span class="font-medium">Зарегистрирован:</span>
+                            <span class="ml-auto text-gray-900 dark:text-white">
+                                {{ $user->created_at->format('d.m.Y') }}
+                            </span>
+                        </div>
+
+                        <div class="flex items-center text-gray-600 dark:text-gray-400">
+                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            <span class="font-medium">Последнее обновление:</span>
+                            <span class="ml-auto text-gray-900 dark:text-white">
+                                {{ $user->updated_at->format('d.m.Y H:i') }}
+                            </span>
+                        </div>
+
+                        @if($user->email_verified_at)
+                            <div class="flex items-center text-green-600 dark:text-green-400">
+                                <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                          clip-rule="evenodd"/>
+                                </svg>
+                                <span class="font-medium">Email подтвержден</span>
+                            </div>
+                        @else
+                            <div class="flex items-center text-amber-600 dark:text-amber-400">
+                                <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.998-.833-2.732 0L4.092 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                </svg>
+                                <span class="font-medium">Email не подтвержден</span>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
 
+            <!-- Правая колонка - Подробная информация -->
+            <div class="lg:col-span-2">
+                <!-- Контактная информация -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                    <div class="flex items-center justify-between mb-6">
+                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">Контактная информация</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                    Полное имя
+                                </label>
+                                <div class="text-gray-900 dark:text-white font-medium">
+                                    {{ $user->name }}
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                    Email адрес
+                                </label>
+                                <div class="flex items-center">
+                                    <span class="text-gray-900 dark:text-white font-medium">{{ $user->email }}</span>
+                                    @if($user->email_verified_at)
+                                        <span class="ml-2 inline-flex items-center px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300">
+                                            Подтвержден
+                                        </span>
+                                    @endif
+                                </div>
+                            </div>
+
+                            @if($user->phone)
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                        Телефон
+                                    </label>
+                                    <div class="text-gray-900 dark:text-white font-medium">
+                                        {{ $user->phone }}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+
+                        <div class="space-y-4">
+                            @if($user->position)
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                        Должность
+                                    </label>
+                                    <div class="text-gray-900 dark:text-white font-medium">
+                                        {{ $user->position }}
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($user->department)
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                        Отдел
+                                    </label>
+                                    <div class="text-gray-900 dark:text-white font-medium">
+                                        {{ $user->department }}
+                                    </div>
+                                </div>
+                            @endif
+
+                            @if($user->location)
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                        Местоположение
+                                    </label>
+                                    <div class="text-gray-900 dark:text-white font-medium">
+                                        {{ $user->location }}
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Активность -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Последняя активность</h3>
+
+                    <div class="space-y-4">
+                        @if($user->last_login_at)
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-900 dark:text-white font-medium">Последний вход в систему</p>
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                        {{ $user->last_login_at->format('d.m.Y в H:i') }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+
+                        @if($user->last_seen)
+                            <div class="flex items-start">
+                                <div class="flex-shrink-0 mt-1">
+                                    <div class="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
+                                        <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                                <div class="ml-4">
+                                    <p class="text-gray-900 dark:text-white font-medium">Был онлайн</p>
+                                    <p class="text-gray-600 dark:text-gray-400 text-sm">
+                                        {{ $user->last_seen->diffForHumans() }}
+                                    </p>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+
+                <!-- Действия -->
+                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Действия</h3>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <a href="{{ route('users.edit', $user) }}"
+                           class="flex items-center justify-center p-4 border border-gray-300 dark:border-gray-600
+                                  rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors group">
+                            <div class="flex items-center">
+                                <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900
+                                            flex items-center justify-center mr-3 group-hover:bg-blue-200
+                                            dark:group-hover:bg-blue-800 transition-colors">
+                                    <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </div>
+                                <div>
+                                    <div class="font-medium text-gray-900 dark:text-white">Редактировать профиль</div>
+                                    <div class="text-sm text-gray-500 dark:text-gray-400">Изменить данные пользователя</div>
+                                </div>
+                            </div>
+                        </a>
+
+                        @if($user->id !== auth()->id())
+                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="contents"
+                                  onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?')">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit"
+                                        class="flex items-center justify-center p-4 border border-gray-300 dark:border-gray-600
+                                           rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors group cursor-pointer
+                                           border-red-200 dark:border-red-800">
+                                    <div class="flex items-center">
+                                        <div class="h-10 w-10 rounded-full bg-red-100 dark:bg-red-900
+                                                flex items-center justify-center mr-3 group-hover:bg-red-200
+                                                dark:group-hover:bg-red-800 transition-colors">
+                                            <svg class="w-5 h-5 text-red-600 dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                            </svg>
+                                        </div>
+                                        <div>
+                                            <div class="font-medium text-red-700 dark:text-red-400">Удалить пользователя</div>
+                                            <div class="text-sm text-gray-500 dark:text-gray-400">Удалить аккаунт из системы</div>
+                                        </div>
+                                    </div>
+                                </button>
+                            </form>
+                        @else
+                            <div class="flex items-center justify-center p-4 border border-gray-300 dark:border-gray-600 rounded-lg opacity-50">
+                                <div class="flex items-center">
+                                    <div class="h-10 w-10 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mr-3">
+                                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="font-medium text-gray-900 dark:text-white">Удалить пользователя</div>
+                                        <div class="text-sm text-gray-500 dark:text-gray-400">Нельзя удалить свой аккаунт</div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
+
+    </div>
 @endsection
+
+@push('styles')
+    <style>
+        .avatar-container {
+            transition: all 0.3s ease;
+        }
+
+        .avatar-container:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+@endpush

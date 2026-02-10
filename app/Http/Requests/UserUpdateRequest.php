@@ -28,12 +28,15 @@ class UserUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
+        $user= $this->route()->parameter('user');
         return [
             'name'     => 'required|max:255',
             'email' => [
                 'required',
                 'email',
                 'max:255',
+                Rule::unique('users')->ignore($user->id),
+
             ],
             'password' => [
                 'nullable',      // Можно не указывать при обновлении
@@ -41,11 +44,10 @@ class UserUpdateRequest extends FormRequest
                 'min:6',         // Минимум 6 символов
                 'confirmed',     // Должен совпадать с password_confirmation
             ],
-
-
-
-//            'name'     => 'required|max:255',
-//            'email' => 'required|email|max:255|unique:users,email,' . $user->id,//игнор user существующего email
+            'avatar' => ['nullable',
+                'image',
+                'mimes:jpeg,png,jpg,gif,svg',
+                'max:2048'],
         ];
     }
     public function messages(): array
