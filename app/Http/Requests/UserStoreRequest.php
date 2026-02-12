@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\NameRule;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UserStoreRequest extends FormRequest
@@ -23,7 +24,11 @@ class UserStoreRequest extends FormRequest
     {
         return [
 
-            'name' => 'required|max:255',
+            'name' => [
+                'required',
+                'max:255',
+                new NameRule()
+            ],
             'email' => 'required|email|max:255|unique:users',
             'password' => 'required|min:6|confirmed',
             'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg',

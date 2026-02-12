@@ -18,16 +18,19 @@ class UserRepository
     {
         DB::beginTransaction();
         try {
-            $filePath = 'storage/' . $userStoreRequest->
-                file('avatar')->
-                store('avatars', 'public');
+            $validatedData = $userStoreRequest->validated();
+            $user = User::query()->create($validatedData);
 
-            $user = User::query()->create($userStoreRequest->validated());
+            if (!empty($validatedData['avatar'])) {
+                $filePath = 'storage/' . $userStoreRequest->
+                    file('avatar')->
+                    store('avatars', 'public');
 
-            Avatar::query()->create([
-                'user_id' => $user->id,
-                'path' => $filePath,
-            ]);
+                Avatar::query()->create([
+                    'user_id' => $user->id,
+                    'path' => $filePath,
+                ]);
+            }
 
             DB::commit();
         } catch (\Exception $exception) {
@@ -81,8 +84,10 @@ class UserRepository
 
     final public function destroy(User $user): bool
     {
-        $fileAvatar = '/avatars/' . basename($user->avatar->path);
-        Storage::disk('public')->delete($fileAvatar);
+        if($user->avatar) {
+            $fileAvatar = '/avatars/' . basename($user->avatar->path);
+            Storage::disk('public')->delete($fileAvatar);
+        }
         return $user->forceDelete();
     }
 }

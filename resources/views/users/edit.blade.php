@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 @section('content')
     <div class="container mx-auto px-4 py-8 max-w-3xl">
 
@@ -47,7 +47,7 @@
                                              class="w-full h-full object-cover">
                                     @else
                                         <div id="avatarLetter" class="h-full w-full flex items-center justify-center text-5xl">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                            {{ strtoupper(mb_substr($user->name, 0, 1)) }}
                                         </div>
                                     @endif
                                 </div>

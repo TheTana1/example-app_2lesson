@@ -6,6 +6,7 @@ use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repository\UserRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 
 
@@ -27,8 +28,39 @@ class UserController extends Controller
     public function index()
     {
         //        dd(User::withTrashed()->get()); // с мягким удалением
-
-
+//        $user =Auth::user();
+//        $page = 3;
+//        $perPage = 10;
+//        $usersIds = [
+//            33, 66, 99
+//        ];
+//
+//
+//        dd(
+//            DB::table('users')->
+//            join('phones', 'users.id', '=', 'phones.user_id')->
+//            get(),
+//
+//            DB::table('users')->select(['id', 'name', 'email', 'avatar'])->
+//            take(10)->orderByDesc('id')->get(),
+//            User::query()->select(['id', 'name', 'email', 'avatar'])->
+//            take(10)->orderByDesc('id')->get(),
+//            User::query()->skip($page * $perPage - $perPage)->
+//            take($perPage)->get(),
+//            User::query()->select('id', 'name')->
+//            whereIn('id', $usersIds)->get()->toArray(),
+//            User::query()->select('id', 'name')->
+//            whereIn('id', $usersIds)->sum('id'),
+//            User::query()->select('id', 'name')->
+//            whereIn('id', $usersIds)->count(),
+//            User::query()->select('id', 'name')->
+//            has('phones')->get(),
+//            User::query()->select('id', 'name')->
+//            doesntHave('phones')->get(),
+//            User::query()->with('phones')->whereHas('phones', function ($filter){
+//                $filter->where('number', '+1-341-439-2098');
+//            })
+        //);
         $users = User::query()->paginate(10);
 
         return view('users.index', [
@@ -49,11 +81,12 @@ class UserController extends Controller
      */
     public function store(UserStoreRequest $userStoreRequest)
     {
-
+        //dd($userStoreRequest->input());
         //$user = User::query()->create($userStoreRequest->validated());
 
         return redirect()->route('users.show',
             $this->userRepository->store($userStoreRequest));
+
     }
 
     /**
@@ -66,6 +99,7 @@ class UserController extends Controller
             'user' => $user,
         ]);
     }
+
     public function edit(User $user)
     {
         return view('users.edit', [
@@ -83,7 +117,7 @@ class UserController extends Controller
         route('users.show',
             $this->userRepository->
             update($userUpdateRequest, $user))->
-            with('success', 'Пользователь удачно обновлён');
+        with('success', 'Пользователь удачно обновлён');
 
     }
 
@@ -93,12 +127,12 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         $userRemoveResult = $this->userRepository->destroy($user);
-        if($userRemoveResult){
+        if ($userRemoveResult) {
             return redirect()->route('users.index')->
-            with('success',  'Пользователь удалён');
+            with('success', 'Пользователь удалён');
         }
         return redirect()->route('users.index')->
-            withErrors('error', 'Пользователь не найден');
+        withErrors('error', 'Пользователь не найден');
 
     }
 }

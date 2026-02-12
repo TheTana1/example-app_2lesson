@@ -1,4 +1,4 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
     <div class="container mx-auto px-4 py-8 max-w-5xl">
@@ -75,7 +75,7 @@
                                 <div class="h-48 w-48 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600
                                             flex items-center justify-center text-white font-bold text-5xl shadow-xl
                                             border-4 border-white dark:border-gray-700">
-                                    {{ strtoupper(substr($user->name, 0, 1)) }}
+                                    {{ strtoupper(mb_substr($user->name, 0, 1)) }}
                                 </div>
                             @endif
 

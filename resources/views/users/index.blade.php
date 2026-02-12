@@ -1,8 +1,6 @@
-@extends('layouts.app')
+@extends('layouts.main')
 
 @section('content')
-<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-
     <div class="container mx-auto px-4 py-8 max-w-7xl">
 
         <!-- Header -->
@@ -42,6 +40,7 @@
                     </div>
                 </div>
             @endif
+
             <!-- Table -->
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -63,43 +62,39 @@
                     </thead>
                     <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                     @forelse ($users as $user)
-                        <tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150">
+                        <tr
+                            onclick="window.location='{{ route('users.show', $user) }}'"
+                            class="hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-150 cursor-pointer group"
+                        >
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
-                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg">
-                                            {{ strtoupper(substr($user->name, 0, 1)) }}
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shadow-sm group-hover:shadow-md transition-shadow">
+                                            {{ strtoupper(mb_substr($user->name, 0, 1)) }}
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                                             {{ $user->name }}
                                         </div>
                                     </div>
                                 </div>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap">
-                                <div class="text-sm text-gray-900 dark:text-gray-300">
+                                <div class="text-sm text-gray-900 dark:text-gray-300 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors">
                                     {{ $user->email }}
                                 </div>
                             </td>
-                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300 transition-colors">
                                 {{ $user->created_at->format('d.m.Y H:i') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                <div class="flex items-center justify-end gap-4">
+                                <div class="flex items-center justify-end gap-4" onclick="event.stopPropagation()">
                                     <!-- Просмотр -->
-{{--                                    <a href="{{ route('users.show', $user) }}"--}}
-{{--                                       class="text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300 transition"--}}
-{{--                                       title="Просмотр">--}}
-{{--                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">--}}
-{{--                                            <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />--}}
-{{--                                            <path stroke-linecap="round" stroke-linejoin="round" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />--}}
-{{--                                        </svg>--}}
-{{--                                    </a>--}}
 
-                                    <!-- Редактирование (была ошибка — стоял show вместо edit) -->
-                                    <a href="{{ route('users.show', $user) }}"
+
+                                    <!-- Редактирование -->
+                                    <a href="{{ route('users.edit', $user) }}"
                                        class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 transition"
                                        title="Редактировать">
                                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -112,7 +107,7 @@
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                                onclick="return confirm('Вы уверены, что хотите удалить пользователя {{ addslashes($user->name) }}?')"
+                                                onclick="event.stopPropagation(); return confirm('Вы уверены, что хотите удалить пользователя {{ addslashes($user->name) }}?')"
                                                 class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
                                                 title="Удалить">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
@@ -142,14 +137,23 @@
             <!-- Pagination -->
             @if ($users->hasPages())
                 <div class="px-6 py-5 border-t border-gray-200 dark:border-gray-700">
-                    {{ $users->links() }}
-                    <!-- или {{ $users->links('pagination::tailwind') }} если хочешь именно tailwind-стиль -->
+                    {{ $users->links('pagination::tailwind') }}
                 </div>
             @endif
 
         </div>
 
     </div>
+
+    <!-- Небольшой скрипт для обработки кликов на пустых местах -->
+    <script>
+        // Предотвращаем случайные клики при выделении текста
+        document.querySelectorAll('tbody tr[cursor-pointer]').forEach(row => {
+            row.addEventListener('mousedown', (e) => {
+                if (e.detail > 1) {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
 @endsection
-
-
