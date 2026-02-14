@@ -88,7 +88,7 @@
                             </button>
                         </form>
                     @else
-                        <a href="#" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                        <a href="/./login" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
                             Войти
                         </a>
                     @endauth

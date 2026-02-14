@@ -10,12 +10,12 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect()->route('users.index');
 });
-Route::resource('users', UserController::class);
 
-Route::middleware('auth')->group(function () {})->
+Route::resource('users', UserController::class)->except(['edit','delete']);
+//Route::get('users/{slug}/edit', [UserController::class, 'edit'])->name('users.edit');
+
+Route::middleware(\App\Http\Middleware\AuthAlways::class)->group(function () {})->
     resource('users', UserController::class);
-
-
 
 Auth::routes();
 

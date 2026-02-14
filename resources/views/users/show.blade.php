@@ -14,7 +14,7 @@
                         Просмотр и управление профилем
                     </p>
                 </div>
-
+                @auth
                 <div class="flex items-center space-x-3">
                     <a href="{{ route('users.edit', $user) }}"
                        class="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700
@@ -25,7 +25,7 @@
                         </svg>
                         Редактировать
                     </a>
-
+                    @endauth
                     <a href="{{ url()->previous() }}"
                        class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700
                               hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
@@ -305,8 +305,10 @@
                 </div>
 
                 <!-- Действия -->
+                @auth
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Действия</h3>
+
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <a href="{{ route('users.edit', $user) }}"
@@ -370,6 +372,7 @@
                             </div>
                         @endif
                     </div>
+                    @endauth
                 </div>
             </div>
         </div>

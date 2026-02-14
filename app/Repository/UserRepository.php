@@ -55,16 +55,19 @@ class UserRepository
                 $filePath = 'storage/' . $userUpdateRequest->
                     file('avatar')->
                     store('avatars', 'public');
+
+                Avatar::query()->create([
+                    'user_id' => $user->id,
+                    'path' => $filePath,
+                ]);
             }
             $user->save();
-            Avatar::query()->create([
-                'user_id' => $user->id,
-                'path' => $filePath,
-            ]);
+
             DB::commit();
         } catch (\Exception $exception) {
             Log::critical($exception->getMessage());
             DB::rollBack();
+            dd($user);
             throw new BadRequestException($exception->getMessage());
         }
 

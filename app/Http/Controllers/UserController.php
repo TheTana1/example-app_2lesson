@@ -2,30 +2,34 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\UserFilters;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repository\UserRepository;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
 
 
 class UserController extends Controller
 {
-    private UserRepository $userRepository;
+//    private UserRepository $userRepository;
 
     /**
      * Display a listing of the resource.
      */
 
     public function __construct(
-        UserRepository $userRepository
+        private readonly  UserRepository $userRepository,
+        private readonly UserFilters $userFilters
     )
     {
-        $this->userRepository = $userRepository;
+//        $this->userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(Request $request): View
     {
         //        dd(User::withTrashed()->get()); // с мягким удалением
 //        $user =Auth::user();
@@ -61,10 +65,13 @@ class UserController extends Controller
 //                $filter->where('number', '+1-341-439-2098');
 //            })
         //);
-        $users = User::query()->paginate(10);
 
+
+        $query = User::query();
         return view('users.index', [
-            'users' => $users,
+            'users' => $this->userFilters->apply($request, $query)
+                ->paginate(10)
+                ->withQueryString(),
         ]);
     }
 
@@ -102,9 +109,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        return view('users.edit', [
-            'user' => $user,
-        ]);
+        return view('users.edit',compact('user'));
     }
 
 
