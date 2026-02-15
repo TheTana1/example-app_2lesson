@@ -22,11 +22,11 @@ class UserController extends Controller
      */
 
     public function __construct(
-        private readonly  UserRepository $userRepository,
+        private   UserRepository $userRepository,
         private readonly UserFilters $userFilters
     )
     {
-//        $this->userRepository = $userRepository;
+       $this->userRepository = $userRepository;
     }
 
     public function index(Request $request): View
@@ -67,9 +67,10 @@ class UserController extends Controller
         //);
 
 
-        $query = User::query();
+        $query = User::query()->with('phones.phoneBrand');
         return view('users.index', [
-            'users' => $this->userFilters->apply($request, $query)
+            'users' => $this->userFilters
+                ->apply($request, $query)
                 ->paginate(10)
                 ->withQueryString(),
         ]);
@@ -90,9 +91,10 @@ class UserController extends Controller
     {
         //dd($userStoreRequest->input());
         //$user = User::query()->create($userStoreRequest->validated());
+        $newUser = $this->userRepository->store($userStoreRequest);
+        return redirect()->route('users.show',$newUser->slug)
+            ->with('success', 'Пользователь удачно создан');
 
-        return redirect()->route('users.show',
-            $this->userRepository->store($userStoreRequest));
 
     }
 
@@ -102,13 +104,18 @@ class UserController extends Controller
     public function show(User $user)
     {
 
-        return view('users.show', [
-            'user' => $user,
-        ]);
+        $user->load(
+            'phones',
+            'avatar',
+            'phones.phoneBrand'
+        );
+        //compact создает массив из переменных по их ИМЕНАМ!! vvvvvvv
+        return view('users.show',       compact('user'));
     }
 
     public function edit(User $user)
     {
+        $user->load('phones.phoneBrand');
         return view('users.edit',compact('user'));
     }
 
@@ -118,11 +125,10 @@ class UserController extends Controller
      */
     public function update(UserUpdateRequest $userUpdateRequest, User $user)
     {
-        return redirect()->
-        route('users.show',
-            $this->userRepository->
-            update($userUpdateRequest, $user))->
-        with('success', 'Пользователь удачно обновлён');
+        $updatedUser = $this->userRepository->update($userUpdateRequest, $user);
+        return redirect()
+            ->route('users.show', $updatedUser->slug)
+            ->with('success', 'Пользователь удачно обновлён');
 
     }
 

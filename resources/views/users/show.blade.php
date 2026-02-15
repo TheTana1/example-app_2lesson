@@ -208,6 +208,17 @@
                                 </div>
                             </div>
 
+                            <div>
+                                <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
+                                    Устройства
+                                </label>
+                                <div class="text-gray-900 dark:text-white font-medium">
+                                    @foreach($user->phones as $phone)
+                                        <p>{{$phone->phoneBrand->name  . ': ' . $phone->number}}</p>
+                                    @endforeach
+                                </div>
+                            </div>
+
                             @if($user->phone)
                                 <div>
                                     <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">

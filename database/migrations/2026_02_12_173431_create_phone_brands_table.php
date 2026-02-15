@@ -13,10 +13,7 @@ return new class extends Migration
     {
         Schema::create('phone_brands', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id');
-            $table->foreignId('phone_brand_id')->
-            constrained( 'id')->
-            on();
+            $table->string('name')->unique();
             $table->timestamps();
         });
     }

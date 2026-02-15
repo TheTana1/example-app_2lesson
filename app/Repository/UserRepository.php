@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Exception\BadRequestException;
 
 class UserRepository
@@ -19,6 +20,7 @@ class UserRepository
         DB::beginTransaction();
         try {
             $validatedData = $userStoreRequest->validated();
+            $validatedData['slug'] = Str::slug($userStoreRequest->name);
             $user = User::query()->create($validatedData);
 
             if (!empty($validatedData['avatar'])) {
@@ -46,6 +48,7 @@ class UserRepository
         DB::beginTransaction();
         try {
             $validatedData = $userUpdateRequest->validated();
+
             $user->name = $validatedData['name'];
             $user->email = $validatedData['email'];
             if (!empty($validatedData['password'])) {
@@ -61,14 +64,15 @@ class UserRepository
                     'path' => $filePath,
                 ]);
             }
-            $user->save();
 
+            $user->save();
             DB::commit();
+
+            return $user->refresh();
         } catch (\Exception $exception) {
             Log::critical($exception->getMessage());
             DB::rollBack();
-            dd($user);
-            throw new BadRequestException($exception->getMessage());
+            throw new BadRequestException('Не удалось обновить пользователя: ' . $exception->getMessage());
         }
 
 //        if (isset($validatedData['password'])) {
@@ -82,7 +86,7 @@ class UserRepository
 //        $user->update($validatedData);
 
 
-        return $user->refresh();
+
     }
 
     final public function destroy(User $user): bool

@@ -13,7 +13,7 @@ Route::get('/', function () {
 
 Route::resource('users', UserController::class)->except(['edit','delete']);
 //Route::get('users/{slug}/edit', [UserController::class, 'edit'])->name('users.edit');
-
+//Route::put('users/{slug}', [UserController::class, 'update'])->name('users.update');
 Route::middleware(\App\Http\Middleware\AuthAlways::class)->group(function () {})->
     resource('users', UserController::class);
 

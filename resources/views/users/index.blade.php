@@ -76,23 +76,33 @@
                                 </select>
                             </div>
 
-                            <!-- Фильтр по дате регистрации -->
-                            <div class="w-full lg:w-48">
-                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-                                    Дата регистрации
-                                </label>
-                                <select name="date_filter"
-                                        class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600
-                                               rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
-                                               text-gray-900 dark:text-white transition-colors duration-200">
-                                    <option value="">Все время</option>
-                                    <option value="{{ DateTime }}" {{ request('date_filter') == 'today' ? 'selected' : '' }}>Сегодня</option>
-                                    <option value="week" {{ request('date_filter') == 'week' ? 'selected' : '' }}>За неделю</option>
-                                    <option value="month" {{ request('date_filter') == 'month' ? 'selected' : '' }}>За месяц</option>
-                                    <option value="year" {{ request('date_filter') == 'year' ? 'selected' : '' }}>За год</option>
-                                </select>
-                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <!-- Дата с -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Дата с
+                                    </label>
+                                    <input type="date"
+                                           name="date_from"
+                                           value="{{ request('date_from') }}"
+                                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600
+                      rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      text-gray-900 dark:text-white transition-colors duration-200">
+                                </div>
 
+                                <!-- Дата по -->
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                        Дата по
+                                    </label>
+                                    <input type="date"
+                                           name="date_to"
+                                           value="{{ request('date_to') }}"
+                                           class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600
+                      rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                      text-gray-900 dark:text-white transition-colors duration-200">
+                                </div>
+                            </div>
                             <!-- Сортировка -->
                             <div class="w-full lg:w-48">
                                 <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
@@ -150,11 +160,13 @@
                                 </span>
                             @endif
 
-                            @if(request('active') !== '2')
+                            @if(request('active')!=='2')
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm
                                              bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400
                                              border border-indigo-200 dark:border-indigo-800">
-                                    {{ request('active') == '1' ? 'Активные' : 'Неактивные' }}
+
+                                    {{ request('active') ? 'Активные' : 'Неактивные' }}
+
                                     <a href="{{ route('users.index', array_merge(request()->except(['active', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,17 +176,28 @@
                                 </span>
                             @endif
 
-                            @if(request('date_filter'))
+                            @if(request('date_from'))
                                 <span class="inline-flex items-center px-3 py-1 rounded-full text-sm
                                              bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400
                                              border border-indigo-200 dark:border-indigo-800">
-                                    @switch(request('date_filter'))
-                                        @case('today') Сегодня @break
-                                        @case('week') За неделю @break
-                                        @case('month') За месяц @break
-                                        @case('year') За год @break
-                                    @endswitch
-                                    <a href="{{ route('users.index', array_merge(request()->except(['date_filter', 'page']))) }}"
+                                    {{request('date_from')}}
+
+                                    <a href="{{ route('users.index', array_merge(request()->except(['date_from', 'page']))) }}"
+                                       class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        </svg>
+                                    </a>
+                                </span>
+                            @endif
+
+                            @if(request('date_to'))
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm
+                                             bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400
+                                             border border-indigo-200 dark:border-indigo-800">
+                                    {{request('date_to')}}
+
+                                    <a href="{{ route('users.index', array_merge(request()->except(['date_to', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>

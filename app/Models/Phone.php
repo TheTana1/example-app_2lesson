@@ -20,8 +20,8 @@ class Phone extends Model
     {
         return $this->belongTo(User::class);
     }
-//    public function phoneBrand(): belongsTo
-//    {
-//        return $this->belongsTo(PhoneBrand::class);
-//    }
+    public function phoneBrand(): belongsTo
+    {
+        return $this->belongsTo(PhoneBrand::class);
+    }
 }

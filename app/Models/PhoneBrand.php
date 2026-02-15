@@ -3,10 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class PhoneBrand extends Model
 {
     protected $fillable = [
         'name'
     ];
+
+    public function phones(): HasMany
+    {
+        return $this->hasMany(Phone::class);
+    }
 }

@@ -28,7 +28,7 @@
 
             <div class="p-6 sm:p-8">
 
-                <form method="POST" action="{{ route('users.update', $user->id) }}" enctype="multipart/form-data">
+                <form method="POST" action="{{ route('users.update', $user) }}" enctype="multipart/form-data">
                     @csrf
                     @method('PUT')
 
@@ -85,7 +85,6 @@
                                 <input type="file"
                                        name="avatar"
                                        id="avatar"
-                                       accept="image/jpeg,image/png,image/jpg"
                                        class="hidden">
 
                                 @error('avatar')

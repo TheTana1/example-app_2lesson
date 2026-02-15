@@ -40,7 +40,8 @@ class UserController extends Controller
     public function show(User $user): UserResource
     {
 
-        return new UserResource($user->load(['phones:id, number, user_id, phoneBrand_id',
+        return new UserResource($user->load([
+            'phones:id, number, user_id, phoneBrand_id',
             'phones.phoneBrand:id,name',
             'avatar']));
     }
