@@ -8,7 +8,10 @@
     <title>@yield('title', 'Админ-панель')</title>
 
     <!-- Tailwind CDN (для быстрого старта) -->
-    <script src="https://cdn.tailwindcss.com"></script>
+{{--    <script src="https://cdn.tailwindcss.com"></script>--}}
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+
+
 
     <!-- Настройки Tailwind (можно расширить по вкусу) -->
     <script>

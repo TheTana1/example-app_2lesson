@@ -29,7 +29,7 @@ class UserController extends Controller
     {
         $users = User::query()->
             with([
-                'phones:id, number, user_id, phone_brand_id',
+                'phones:id,number,user_id,phone_brand_id',
                 'phones.phoneBrand:id,name',
                 'avatar'])->
             paginate($request->get('per_page', self::PER_PAGE));

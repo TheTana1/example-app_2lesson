@@ -12,7 +12,8 @@ return new class extends Migration {
             $table->foreignId('user_id');
             $table->foreignId('phone_brand_id')
                 ->references('id')
-                ->on('phone_brands');
+                ->on('phone_brands')
+            ->onDelete('cascade');
             $table->string('number')->unique();
             $table->timestamps();
         });

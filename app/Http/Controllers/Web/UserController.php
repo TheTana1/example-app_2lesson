@@ -1,32 +1,32 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Web;
 
 use App\Filters\UserFilters;
+use App\Http\Controllers\Controller;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
 use App\Models\User;
 use App\Repository\UserRepository;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 
 class UserController extends Controller
 {
 //    private UserRepository $userRepository;
+    private const PER_PAGE = 10;
 
     /**
      * Display a listing of the resource.
      */
 
     public function __construct(
-        private   UserRepository $userRepository,
+        private UserRepository       $userRepository,
         private readonly UserFilters $userFilters
     )
     {
-       $this->userRepository = $userRepository;
+        $this->userRepository = $userRepository;
     }
 
     public function index(Request $request): View
@@ -68,10 +68,15 @@ class UserController extends Controller
 
 
         $query = User::query()->with('phones.phoneBrand');
+        $queryTrashed = User::onlyTrashed()->with('phones.phoneBrand');
         return view('users.index', [
             'users' => $this->userFilters
                 ->apply($request, $query)
                 ->paginate(10)
+                ->withQueryString(),
+            'usersTrashed' => $this->userFilters
+                ->apply($request, $queryTrashed)
+                ->paginate(5)
                 ->withQueryString(),
         ]);
     }
@@ -92,7 +97,7 @@ class UserController extends Controller
         //dd($userStoreRequest->input());
         //$user = User::query()->create($userStoreRequest->validated());
         $newUser = $this->userRepository->store($userStoreRequest);
-        return redirect()->route('users.show',$newUser->slug)
+        return redirect()->route('users.show', $newUser->slug)
             ->with('success', 'Пользователь удачно создан');
 
 
@@ -103,20 +108,26 @@ class UserController extends Controller
      */
     public function show(User $user)
     {
-
+//dd($user->load(
+//    'phones',
+//    'avatar',
+//    'phones.phoneBrand',
+//    'books',
+//));
         $user->load(
             'phones',
             'avatar',
-            'phones.phoneBrand'
+            'phones.phoneBrand',
+            'books',
         );
         //compact создает массив из переменных по их ИМЕНАМ!! vvvvvvv
-        return view('users.show',       compact('user'));
+        return view('users.show', compact('user'));
     }
 
     public function edit(User $user)
     {
         $user->load('phones.phoneBrand');
-        return view('users.edit',compact('user'));
+        return view('users.edit', compact('user'));
     }
 
 
@@ -140,10 +151,37 @@ class UserController extends Controller
         $userRemoveResult = $this->userRepository->destroy($user);
         if ($userRemoveResult) {
             return redirect()->route('users.index')->
-            with('success', 'Пользователь удалён');
+            with('success', 'Пользователь в корзине');
         }
         return redirect()->route('users.index')->
         withErrors('error', 'Пользователь не найден');
+
+    }
+
+    public function restore($slug)
+    {
+
+        $user = User::withTrashed()->where('slug', $slug)->firstOrFail();
+        $restoredUser = $this->userRepository->restore($user);
+        if ($restoredUser) {
+            return redirect()->route('users.index')
+                ->with('success', 'Пользователь восстановлен');
+        }
+        return redirect()->route('users.index')
+            ->withErrors('error', 'Ошибка при восстновлении');
+    }
+
+    public function forceDelete($slug)
+    {
+
+        $user = User::withTrashed()->where('slug', $slug)->firstOrFail();
+        $userRemoveResult = $this->userRepository->forceDelete($user);
+        if ($userRemoveResult) {
+            return redirect()->route('users.index')->
+            with('success', 'Пользователь удалён');
+        }
+        return redirect()->route('users.index')->
+        withErrors('error', 'Ошибка при удалении');
 
     }
 }

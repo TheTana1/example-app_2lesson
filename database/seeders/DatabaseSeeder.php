@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Book;
 use App\Models\PhoneBrand;
 use App\Models\User;
 use App\Models\Phone;
@@ -38,6 +39,7 @@ class DatabaseSeeder extends Seeder
         }
         User::factory()
             ->has(Phone::factory()->count(3), 'phones')
+            ->has(Book::factory()->count(rand(0,4)), 'books')
             ->count(1000)
             ->create();
     }

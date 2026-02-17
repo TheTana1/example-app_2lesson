@@ -88,13 +88,23 @@ class UserRepository
 
 
     }
+    final public function restore(User $user) : bool
+    {
 
+        return $user->restore();
+    }
     final public function destroy(User $user): bool
     {
+
         if($user->avatar) {
             $fileAvatar = '/avatars/' . basename($user->avatar->path);
             Storage::disk('public')->delete($fileAvatar);
         }
+        return $user->delete();
+    }
+
+    final public function forceDelete(User $user): bool
+    {
         return $user->forceDelete();
     }
 }

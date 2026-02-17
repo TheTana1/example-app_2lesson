@@ -342,7 +342,7 @@
                         </a>
 
                         @if($user->id !== auth()->id())
-                            <form action="{{ route('users.destroy', $user) }}" method="POST" class="contents"
+                            <form action="{{ route('users.destroy', $user->slug) }}" method="POST" class="contents"
                                   onsubmit="return confirm('Вы уверены, что хотите удалить этого пользователя?')">
                                 @csrf
                                 @method('DELETE')

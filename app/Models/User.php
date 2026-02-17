@@ -70,6 +70,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(Phone::class);
     }
+    public function books() : HasMany
+    {
+        return $this->hasMany(Book::class);
+    }
 
     public function avatar() : HasOne
     {

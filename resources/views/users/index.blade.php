@@ -33,7 +33,8 @@
         <!-- Filters Section -->
         <div class="mb-6">
             <!-- Основная строка фильтров -->
-            <div class="bg-white dark:bg-gray-800 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div
+                class="bg-white dark:bg-gray-800 shadow-lg rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
 
                 <!-- ФОРМА ФИЛЬТРОВ -->
                 <form id="filter-form" method="GET" action="{{ route('users.index') }}">
@@ -54,8 +55,10 @@
                                                   text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400
                                                   transition-colors duration-200">
                                     <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                        <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                                        <svg class="h-5 w-5 text-gray-400 dark:text-gray-500" fill="none"
+                                             stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                                         </svg>
                                     </div>
                                 </div>
@@ -72,7 +75,8 @@
                                                text-gray-900 dark:text-white transition-colors duration-200">
                                     <option value='2'>Все</option>
                                     <option value="1" {{ request('active') == '1' ? 'selected' : '' }}>Активные</option>
-                                    <option value="0" {{ request('active') == '0' ? 'selected' : '' }}>Неактивные</option>
+                                    <option value="0" {{ request('active') == '0' ? 'selected' : '' }}>Неактивные
+                                    </option>
                                 </select>
                             </div>
 
@@ -112,10 +116,19 @@
                                         class="w-full px-4 py-2.5 bg-gray-50 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600
                                                rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
                                                text-gray-900 dark:text-white transition-colors duration-200">
-                                    <option value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>Сначала новые</option>
-                                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Сначала старые</option>
-                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>По имени (А-Я)</option>
-                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>По имени (Я-А)</option>
+                                    <option
+                                        value="newest" {{ request('sort', 'newest') == 'newest' ? 'selected' : '' }}>
+                                        Сначала новые
+                                    </option>
+                                    <option value="oldest" {{ request('sort') == 'oldest' ? 'selected' : '' }}>Сначала
+                                        старые
+                                    </option>
+                                    <option value="name_asc" {{ request('sort') == 'name_asc' ? 'selected' : '' }}>По
+                                        имени (А-Я)
+                                    </option>
+                                    <option value="name_desc" {{ request('sort') == 'name_desc' ? 'selected' : '' }}>По
+                                        имени (Я-А)
+                                    </option>
                                 </select>
                             </div>
 
@@ -154,7 +167,8 @@
                                     <a href="{{ route('users.index', array_merge(request()->except(['search', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </a>
                                 </span>
@@ -170,7 +184,8 @@
                                     <a href="{{ route('users.index', array_merge(request()->except(['active', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </a>
                                 </span>
@@ -185,7 +200,8 @@
                                     <a href="{{ route('users.index', array_merge(request()->except(['date_from', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </a>
                                 </span>
@@ -200,7 +216,8 @@
                                     <a href="{{ route('users.index', array_merge(request()->except(['date_to', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </a>
                                 </span>
@@ -218,7 +235,8 @@
                                     <a href="{{ route('users.index', array_merge(request()->except(['sort', 'page']))) }}"
                                        class="ml-2 hover:text-indigo-900 dark:hover:text-indigo-300">
                                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                  d="M6 18L18 6M6 6l12 12"/>
                                         </svg>
                                     </a>
                                 </span>
@@ -234,7 +252,8 @@
                                           transition-colors">
                                     Очистить все
                                     <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
                                 </a>
                             @endif
@@ -244,13 +263,15 @@
 
                 <!-- Информация о количестве результатов -->
                 <div class="px-5 py-3 bg-gray-50/50 dark:bg-gray-900/20 text-sm text-gray-600 dark:text-gray-400">
-                    Найдено пользователей: <span class="font-semibold text-indigo-600 dark:text-indigo-400">{{ $users->total() }}</span>
+                    Найдено пользователей: <span
+                        class="font-semibold text-indigo-600 dark:text-indigo-400">{{ $users->total() }}</span>
                 </div>
             </div>
         </div>
 
         <!-- Card с таблицей пользователей -->
-        <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+        <div
+            class="bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
             @if(session()->has('success'))
                 <div class="m-5 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800
                         rounded-lg text-green-700 dark:text-green-400">
@@ -305,12 +326,14 @@
                             <!-- Колонка статуса (active) -->
                             <td class="px-6 py-4 whitespace-nowrap">
                                 @if($user->active)
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border border-green-200 dark:border-green-800">
                                         <span class="w-2 h-2 bg-green-500 rounded-full mr-1.5"></span>
                                         Активен
                                     </span>
                                 @else
-                                    <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400 border border-gray-200 dark:border-gray-700">
                                         <span class="w-2 h-2 bg-gray-400 rounded-full mr-1.5"></span>
                                         Неактивен
                                     </span>
@@ -327,14 +350,17 @@
 
                                             <!-- Индикатор на аватаре -->
                                             @if($user->active)
-                                                <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-gray-800 bg-green-500"></span>
+                                                <span
+                                                    class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-gray-800 bg-green-500"></span>
                                             @else
-                                                <span class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-gray-800 bg-gray-400"></span>
+                                                <span
+                                                    class="absolute bottom-0 right-0 block h-3 w-3 rounded-full ring-2 ring-white dark:ring-gray-800 bg-gray-400"></span>
                                             @endif
                                         </div>
                                     </div>
                                     <div class="ml-4">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                        <div
+                                            class="text-sm font-medium text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
                                             {{ $user->name }}
                                         </div>
                                     </div>
@@ -367,7 +393,8 @@
                                         <a href="{{ route('users.edit', $user) }}"
                                            class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 transition"
                                            title="Редактировать">
-                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                 stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                       d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.828 2.828L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931z"/>
                                             </svg>
@@ -382,7 +409,8 @@
                                                     onclick="event.stopPropagation(); return confirm('Вы уверены, что хотите удалить пользователя {{ addslashes($user->name) }}?')"
                                                     class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
                                                     title="Удалить">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                <svg class="w-5 h-5" fill="none" stroke="currentColor"
+                                                     viewBox="0 0 24 24" stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                           d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/>
                                                 </svg>
@@ -410,6 +438,7 @@
                 </table>
             </div>
 
+
             <!-- Pagination -->
             @if ($users->hasPages())
                 <div class="px-6 py-5 border-t border-gray-200 dark:border-gray-700">
@@ -417,23 +446,144 @@
                 </div>
             @endif
         </div>
-    </div>
 
-    <!-- Скрипт для обработки кликов -->
-    <script>
-        document.querySelectorAll('tbody tr[cursor-pointer]').forEach(row => {
-            row.addEventListener('mousedown', (e) => {
-                if (e.detail > 1) {
-                    e.preventDefault();
-                }
-            });
-        });
 
-        // Автоматическая отправка формы при изменении select (опционально)
-        document.querySelectorAll('select[name="active"], select[name="date_filter"], select[name="sort"]').forEach(select => {
-            select.addEventListener('change', function() {
-                document.getElementById('filter-form').submit();
+        <div class="m-5 flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+                    Удалённые пользователи
+                </h1>
+            </div>
+        </div>
+
+        <div
+            class="bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
+            @if(session()->has('success'))
+                <div class="m-5 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800
+                        rounded-lg text-green-700 dark:text-green-400">
+                    <div class="flex items-center">
+                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd"
+                                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                  clip-rule="evenodd"/>
+                        </svg>
+                        {{ session('success') }}
+                    </div>
+                </div>
+            @endif
+
+            <!-- Table -->
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
+                    <thead class="bg-red-200 dark:bg-red-200">
+                    <tr>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                            Имя
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                            Email
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                            Возраст
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-left text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                            Дата первич. удаления
+                        </th>
+                        <th scope="col"
+                            class="px-6 py-4 text-right text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wider">
+                            Действия
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody class="bg-gray-200 dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
+                    @forelse ($usersTrashed as $user)
+                        <tr>
+                            <td class="px-6 py-4">
+                                <div class="flex items-center">
+                                    <div class="flex-shrink-0 h-10 w-10">
+
+                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600
+                                    flex items-center justify-center text-white font-bold">
+                                                {{ strtoupper(mb_substr($user->name, 0, 1)) }}
+                                            </div>
+
+                                    </div>
+                                    <div class="ml-4">
+                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                            {{ $user->name }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                {{ $user->email }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                {{ $user->age }}
+                            </td>
+                            <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
+                                {{ $user->deleted_at->format('d.m.Y H:i') }}
+                            </td>
+                            <td class="px-6 py-4 text-right space-x-2">
+                                <form action="{{ route('users.restore', $user) }}" method="POST" class="inline">
+                                    @csrf
+                                    <button type="submit"
+                                            class="text-green-600 hover:text-green-800 dark:text-green-400 font-medium"
+                                            onclick="return confirm('Восстановить пользователя {{ $user->name }}?')">
+                                        Восстановить
+                                    </button>
+                                </form>
+
+                                <form action="{{ route('users.force-delete', $user->slug) }}" method="POST" class="inline">
+                                    @csrf
+                                    @method('DELETE')
+                                    <button type="submit"
+                                            class="text-red-600 hover:text-red-800 dark:text-red-400 font-medium ml-2"
+                                            onclick="return confirm('Удалить пользователя {{ $user->name }} навсегда?')">
+                                        Удалить навсегда
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5" class="px-6 py-16 text-center text-gray-500 dark:text-gray-400">
+                                <div class="text-6xl mb-4">🗑️</div>
+                                <p class="text-lg">Корзина пуста</p>
+                            </td>
+                        </tr>
+                    @endforelse
+                    </tbody>
+                </table>
+            </div>
+                <!-- Pagination -->
+                @if ($users->hasPages())
+                    <div class="px-6 py-5 border-t border-gray-200 dark:border-gray-700">
+                        {{ $users->appends(request()->query())->links('pagination::tailwind') }}
+                    </div>
+                @endif
+        </div>
+
+
+        <!-- Скрипт для обработки кликов -->
+        <script>
+            document.querySelectorAll('tbody tr[cursor-pointer]').forEach(row => {
+                row.addEventListener('mousedown', (e) => {
+                    if (e.detail > 1) {
+                        e.preventDefault();
+                    }
+                });
             });
-        });
-    </script>
+
+            // Автоматическая отправка формы при изменении select (опционально)
+            document.querySelectorAll('select[name="active"], select[name="date_filter"], select[name="sort"]').forEach(select => {
+                select.addEventListener('change', function () {
+                    document.getElementById('filter-form').submit();
+                });
+            });
+        </script>
 @endsection
