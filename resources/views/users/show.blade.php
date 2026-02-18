@@ -82,8 +82,8 @@
                             <!-- Статус онлайн/офлайн -->
                             <div class="absolute bottom-4 right-4">
                                 <div class="h-6 w-6 rounded-full bg-green-500 border-2 border-white dark:border-gray-800
-                                            {{ $user->last_seen && $user->last_seen->gt(now()->subMinutes(5)) ? 'bg-green-500' : 'bg-gray-400' }}"
-                                     title="{{ $user->last_seen && $user->last_seen->gt(now()->subMinutes(5)) ? 'Online' : 'Offline' }}">
+                                            {{ $user->active  ? 'bg-green-500' : 'bg-gray-400' }}"
+                                     title="{{ $user->active  ? 'Online' : 'Offline' }}">
                                 </div>
                             </div>
                         </div>
@@ -213,23 +213,16 @@
                                     Устройства
                                 </label>
                                 <div class="text-gray-900 dark:text-white font-medium">
-                                    @foreach($user->phones as $phone)
-                                        <p>{{$phone->phoneBrand->name  . ': ' . $phone->number}}</p>
-                                    @endforeach
+                                    @if($user->phones->isNotEmpty())
+                                        @foreach($user->phones as $phone)
+                                            <p>{{ optional($phone->phoneBrand)->name ?? 'Без бренда' }}: {{ $phone->number }}</p>
+                                        @endforeach
+                                    @else
+                                        <p class="text-gray-500">Нет телефонов</p>
+                                    @endif
                                 </div>
                             </div>
 
-                            @if($user->phone)
-                                <div>
-                                    <label class="block text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">
-                                        Телефон
-                                    </label>
-                                    <div class="text-gray-900 dark:text-white font-medium">
-                                        {{ $user->phone }}
-                                    </div>
-                                </div>
-                            @endif
-                        </div>
 
                         <div class="space-y-4">
                             @if($user->position)
