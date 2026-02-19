@@ -265,47 +265,103 @@
                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 mb-6">
                     <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-6">Последняя активность</h3>
 
-                    <div class="space-y-4">
-                        @if($user->last_login_at)
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 mt-1">
-                                    <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
-                                        </svg>
-                                    </div>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-900 dark:text-white font-medium">Последний вход в систему</p>
-                                    <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                        {{ $user->last_login_at->format('d.m.Y в H:i') }}
-                                    </p>
-                                </div>
-                            </div>
-                        @endif
+                                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
+                                        <div class="flex items-center justify-between mb-6">
+                                            <h3 class="text-lg font-bold text-gray-600 dark:text-white">
+                                                Последние книги:
+                                            </h3>
+                                        </div>
 
-                        @if($user->last_seen)
-                            <div class="flex items-start">
-                                <div class="flex-shrink-0 mt-1">
-                                    <div class="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                                        <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                        </svg>
+                                        @if($user->books)
+                                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                @foreach($user->books as $book)
+                                                    <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
+                                                        <div class="flex-shrink-0">
+
+                                                            @if($book->avatar && Storage::disk('public')->exists(str_replace('storage/', '', $book->avatar->path)))
+                                                                <img src="{{ asset($book->avatar->path) }}"
+                                                                     alt="{{ $book->title }}"
+                                                                     class="h-10 w-10 rounded-full object-cover">
+                                                            @else
+                                                                <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600
+                                                                            flex items-center justify-center text-white text-sm font-bold">
+                                                                    {{ strtoupper(mb_substr($book->title, 0, 1)) }}
+                                                                </div>
+                                                            @endif
+                                                        </div>
+                                                        <div class="ml-3 flex-1">
+                                                            <div class="text-sm font-medium text-gray-900 dark:text-white">
+                                                                {{ $book->title }}
+                                                            </div>
+{{--                                                            <div class="text-xs text-gray-500 dark:text-gray-400">--}}
+{{--                                                                {{ $book->email }}--}}
+{{--                                                            </div>--}}
+                                                        </div>
+                                                        <a href="{{ route('books.show', $book) }}"
+                                                           class="ml-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
+                                                           title="Посмотреть книгу">
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+                                                            </svg>
+                                                        </a>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                        @else
+                                            <div class="text-center py-8">
+                                                <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+                                                          d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                                </svg>
+                                                <p class="text-gray-400 dark:text-gray-400 text-l">
+                                                    Здесь пока что пусто
+                                                </p>
+                                            </div>
+                                        @endif
                                     </div>
-                                </div>
-                                <div class="ml-4">
-                                    <p class="text-gray-900 dark:text-white font-medium">Был онлайн</p>
-                                    <p class="text-gray-600 dark:text-gray-400 text-sm">
-                                        {{ $user->last_seen->diffForHumans() }}
-                                    </p>
-                                </div>
-                            </div>
-                        @endif
-                    </div>
+
+{{--                    <div class="space-y-4">--}}
+{{--                        @if($user->last_login_at)--}}
+{{--                            <div class="flex items-start">--}}
+{{--                                <div class="flex-shrink-0 mt-1">--}}
+{{--                                    <div class="h-8 w-8 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">--}}
+{{--                                        <svg class="w-4 h-4 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
+{{--                                                  d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>--}}
+{{--                                        </svg>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="ml-4">--}}
+{{--                                    <p class="text-gray-900 dark:text-white font-medium">Последний вход в систему</p>--}}
+{{--                                    <p class="text-gray-600 dark:text-gray-400 text-sm">--}}
+{{--                                        {{ $user->last_login_at->format('d.m.Y в H:i') }}--}}
+{{--                                    </p>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
+
+{{--                        @if($user->last_seen)--}}
+{{--                            <div class="flex items-start">--}}
+{{--                                <div class="flex-shrink-0 mt-1">--}}
+{{--                                    <div class="h-8 w-8 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">--}}
+{{--                                        <svg class="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
+{{--                                                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>--}}
+{{--                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
+{{--                                                  d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>--}}
+{{--                                        </svg>--}}
+{{--                                    </div>--}}
+{{--                                </div>--}}
+{{--                                <div class="ml-4">--}}
+{{--                                    <p class="text-gray-900 dark:text-white font-medium">Был онлайн</p>--}}
+{{--                                    <p class="text-gray-600 dark:text-gray-400 text-sm">--}}
+{{--                                        {{ $user->last_seen->diffForHumans() }}--}}
+{{--                                    </p>--}}
+{{--                                </div>--}}
+{{--                            </div>--}}
+{{--                        @endif--}}
+{{--                    </div>--}}
                 </div>
 
                 <!-- Действия -->

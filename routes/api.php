@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('users')->group(function () {
    Route::get('/', [UserController::class, 'index'])->name('users.api.index');
     Route::get('{user}', [UserController::class, 'show'])->name('users.api.show');
-    Route::post('', [UserController::class, 'store'])->name('users.api.store');
+    Route::post('/', [UserController::class, 'store']);
     Route::patch('{user}', [UserController::class, 'update'])->name('users.api.update');
     Route::delete('{user}', [UserController::class, 'destroy'])->name('users.api.destroy');
 });

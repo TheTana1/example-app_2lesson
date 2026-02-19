@@ -13,6 +13,10 @@ class BookFilters
         {
             $query->where('title', 'like', '%'.$request->get('search').'%');
         }
+        if ($request->has('user_id') && $request->get('user_id') != null)
+        {
+            $query->where('user_id', $request->get('user_id'));
+        }
         switch ($request->get('sort', 'newest'))
         {
             case 'oldest':

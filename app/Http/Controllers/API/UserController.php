@@ -41,19 +41,19 @@ class UserController extends Controller
     {
 
         return new UserResource($user->load([
-            'phones:id, number, user_id, phoneBrand_id',
+            'phones:id,number,user_id,phone_brand_id',
             'phones.phoneBrand:id,name',
             'avatar']));
     }
 
     public function store(UserStoreRequest $request): UserResource
     {
-        return new UserResource($this-> $userRepository->store($request));
+        return new UserResource($this->userRepository->store($request));
     }
 
     public function update(UserUpdateRequest $request, User $user): UserResource
     {
-        return new UserResource($this-> $userRepository->update($request, $user));
+        return new UserResource($this->userRepository->update($request, $user));
     }
     public function destroy(User $user) : JsonResponse
     {

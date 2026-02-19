@@ -39,8 +39,16 @@ class DatabaseSeeder extends Seeder
         }
         User::factory()
             ->has(Phone::factory()->count(3), 'phones')
-            ->has(Book::factory()->count(rand(0,4)), 'books')
             ->count(1000)
-            ->create();
+            ->create()
+            ->each(function ($user) {
+                $bookCount = rand(0, 3);
+                if ($bookCount > 0) {
+                    Book::factory()
+                        ->count($bookCount)
+                        ->forUser($user->id)
+                        ->create();
+                }
+            });
     }
 }

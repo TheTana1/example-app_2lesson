@@ -268,6 +268,8 @@
             </div>
         </div>
 
+
+
         <!-- Card с таблицей книг -->
         <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl overflow-hidden border border-gray-200 dark:border-gray-700">
             @if(session()->has('success'))
@@ -375,7 +377,7 @@
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex items-center justify-end gap-4" onclick="event.stopPropagation()">
                                     @auth
-                                        @if(auth()->id() === $book->user_id || auth()->user()?->is_admin)
+{{--                                        @if(auth()->id() === $book->user_id || auth()->user()?)--}}
                                             <a href="{{ route('books.edit', $book) }}"
                                                class="text-amber-600 dark:text-amber-400 hover:text-amber-800 dark:hover:text-amber-300 transition"
                                                title="Редактировать">
@@ -390,7 +392,7 @@
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit"
-                                                        onclick="event.stopPropagation(); return confirm('Вы уверены, что хотите удалить книгу "{{ addslashes($book->title) }}"?')"
+                                                        onclick="return confirm('Удалить пользователя {{ $user->name }}?')"
                                                 class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
                                                 title="Удалить">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"
@@ -400,7 +402,7 @@
                                                 </svg>
                                                 </button>
                                             </form>
-                                        @endif
+{{--                                        @endif--}}
                                     @endauth
                                 </div>
                             </td>

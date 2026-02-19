@@ -12,7 +12,7 @@ class BookRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,11 +22,18 @@ class BookRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
-            'title' => ['required', 'max:255'],
+            'title' => 'required|string|max:255',
+            'user_slug' => 'required|string|exists:users,slug',
+            'author' => 'nullable|string|max:255',
+            'published_year' => 'nullable|integer|min:1800|max:2099',
         ];
+    }
 
-
+    public function messages(): array
+    {
+        return [
+            'user_slug.exists' => 'Пользователь с таким slug не найден',
+        ];
     }
 }

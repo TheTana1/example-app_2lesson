@@ -28,7 +28,7 @@
                             </a>
                         @endif
                     @endauth
-                    <a href="{{ url()->previous() }}"
+                        <a href="{{ route('books.index') }}"
                        class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700
                               hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
                               font-medium rounded-lg transition-colors">
@@ -62,7 +62,7 @@
 
                     <!-- Обложка книги -->
                     <div class="flex flex-col items-center mb-6">
-                        <div class="relative mb-4">
+                        <div class="w-full relative mb-4">
                             @if($book->cover_image)
                                 <div class="h-64 w-full rounded-lg overflow-hidden shadow-xl">
                                     <img src="{{ asset('storage/' . $book->cover_image) }}"
@@ -70,7 +70,7 @@
                                          class="w-full h-full object-cover">
                                 </div>
                             @else
-                                <div class="h-64 w-full bg-gradient-to-br from-blue-500 to-cyan-600
+                                <div class="h-64 bg-gradient-to-br from-blue-500 to-cyan-600
                                             rounded-lg shadow-xl flex items-center justify-center">
                                     <div class="text-center">
                                         <svg class="w-20 h-20 mx-auto text-white opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -271,66 +271,67 @@
                 @endif
 
                 <!-- Список пользователей, у которых есть эта книга -->
-                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">
-                    <div class="flex items-center justify-between mb-6">
-                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">
-                            У кого есть эта книга
-                        </h3>
-                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">
-                            {{ $usersWithBook->count() }} {{ trans_choice('читатель|читателя|читателей', $usersWithBook->count()) }}
-                        </span>
-                    </div>
+{{--                <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6">--}}
+{{--                    <div class="flex items-center justify-between mb-6">--}}
+{{--                        <h3 class="text-xl font-bold text-gray-900 dark:text-white">--}}
+{{--                            У кого есть эта книга--}}
+{{--                        </h3>--}}
+{{--                        <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300">--}}
+{{--                            {{ $book->count() }} {{ trans_choice('читатель|читателя|читателей', $book->count()) }}--}}
+{{--                        </span>--}}
+{{--                    </div>--}}
 
-                    @if($usersWithBook->isNotEmpty())
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            @foreach($usersWithBook as $user)
-                                <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">
-                                    <div class="flex-shrink-0">
-                                        @if($user->avatar && Storage::disk('public')->exists(str_replace('storage/', '', $user->avatar->path)))
-                                            <img src="{{ asset($user->avatar->path) }}"
-                                                 alt="{{ $user->name }}"
-                                                 class="h-10 w-10 rounded-full object-cover">
-                                        @else
-                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600
-                                                        flex items-center justify-center text-white text-sm font-bold">
-                                                {{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                                            </div>
-                                        @endif
-                                    </div>
-                                    <div class="ml-3 flex-1">
-                                        <div class="text-sm font-medium text-gray-900 dark:text-white">
-                                            {{ $user->name }}
-                                        </div>
-                                        <div class="text-xs text-gray-500 dark:text-gray-400">
-                                            {{ $user->email }}
-                                        </div>
-                                    </div>
-                                    <a href="{{ route('users.show', $user) }}"
-                                       class="ml-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"
-                                       title="Посмотреть профиль">
-                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
-                                        </svg>
-                                    </a>
-                                </div>
-                            @endforeach
-                        </div>
-                    @else
-                        <div class="text-center py-8">
-                            <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
-                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                            </svg>
-                            <p class="text-gray-500 dark:text-gray-400 text-lg">
-                                Нет других пользователей с этой книгой
-                            </p>
-                            <p class="text-sm text-gray-400 dark:text-gray-500 mt-2">
-                                Вы можете стать первым владельцем этой книги
-                            </p>
-                        </div>
-                    @endif
-                </div>
+{{--                    @if($book->user)--}}
+{{--                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">--}}
+{{--                            @foreach($book->user as $book->user)--}}
+{{--                                <div class="flex items-center p-3 bg-gray-50 dark:bg-gray-700 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors">--}}
+{{--                                    <div class="flex-shrink-0">--}}
+
+{{--                                        @if($book->user->avatar && Storage::disk('public')->exists(str_replace('storage/', '', $book->user->avatar->path)))--}}
+{{--                                            <img src="{{ asset($book->user->avatar->path) }}"--}}
+{{--                                                 alt="{{ $book->user->name }}"--}}
+{{--                                                 class="h-10 w-10 rounded-full object-cover">--}}
+{{--                                        @else--}}
+{{--                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-600--}}
+{{--                                                        flex items-center justify-center text-white text-sm font-bold">--}}
+{{--                                                {{ strtoupper(mb_substr($book->user->name, 0, 1)) }}--}}
+{{--                                            </div>--}}
+{{--                                        @endif--}}
+{{--                                    </div>--}}
+{{--                                    <div class="ml-3 flex-1">--}}
+{{--                                        <div class="text-sm font-medium text-gray-900 dark:text-white">--}}
+{{--                                            {{ $book->user->name }}--}}
+{{--                                        </div>--}}
+{{--                                        <div class="text-xs text-gray-500 dark:text-gray-400">--}}
+{{--                                            {{ $book->user->email }}--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <a href="{{ route('users.show', $book->user) }}"--}}
+{{--                                       class="ml-2 text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 dark:hover:text-indigo-300"--}}
+{{--                                       title="Посмотреть профиль">--}}
+{{--                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
+{{--                                                  d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>--}}
+{{--                                        </svg>--}}
+{{--                                    </a>--}}
+{{--                                </div>--}}
+{{--                            @endforeach--}}
+{{--                        </div>--}}
+{{--                    @else--}}
+{{--                        <div class="text-center py-8">--}}
+{{--                            <svg class="w-16 h-16 mx-auto text-gray-400 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
+{{--                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"--}}
+{{--                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>--}}
+{{--                            </svg>--}}
+{{--                            <p class="text-gray-500 dark:text-gray-400 text-lg">--}}
+{{--                                Нет других пользователей с этой книгой--}}
+{{--                            </p>--}}
+{{--                            <p class="text-sm text-gray-400 dark:text-gray-500 mt-2">--}}
+{{--                                Вы можете стать первым владельцем этой книги--}}
+{{--                            </p>--}}
+{{--                        </div>--}}
+{{--                    @endif--}}
+{{--                </div>--}}
 
                 <!-- Действия (только для владельца) -->
                 @auth

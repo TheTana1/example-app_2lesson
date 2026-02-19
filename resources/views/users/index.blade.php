@@ -406,7 +406,7 @@
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit"
-                                                    onclick="event.stopPropagation(); return confirm('Вы уверены, что хотите удалить пользователя {{ addslashes($user->name) }}?')"
+                                                    onclick="return confirm('Удалить пользователя {{ $user->name }}?')"
                                                     class="text-red-600 dark:text-red-400 hover:text-red-800 dark:hover:text-red-300 transition"
                                                     title="Удалить">
                                                 <svg class="w-5 h-5" fill="none" stroke="currentColor"

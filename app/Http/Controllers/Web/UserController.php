@@ -46,21 +46,29 @@ class UserController extends Controller
 //            get(),
 //
 //            DB::table('users')->select(['id', 'name', 'email', 'avatar'])->
-//            take(10)->orderByDesc('id')->get(),
+//            take(10)->orderByDesc('id')->get()
+//,
 //            User::query()->select(['id', 'name', 'email', 'avatar'])->
 //            take(10)->orderByDesc('id')->get(),
+
 //            User::query()->skip($page * $perPage - $perPage)->
 //            take($perPage)->get(),
+
 //            User::query()->select('id', 'name')->
 //            whereIn('id', $usersIds)->get()->toArray(),
+
 //            User::query()->select('id', 'name')->
 //            whereIn('id', $usersIds)->sum('id'),
+
 //            User::query()->select('id', 'name')->
 //            whereIn('id', $usersIds)->count(),
+
 //            User::query()->select('id', 'name')->
 //            has('phones')->get(),
+
 //            User::query()->select('id', 'name')->
 //            doesntHave('phones')->get(),
+
 //            User::query()->with('phones')->whereHas('phones', function ($filter){
 //                $filter->where('number', '+1-341-439-2098');
 //            })
@@ -115,11 +123,12 @@ class UserController extends Controller
 //    'books',
 //));
         $user->load(
-            'phones',
+
             'avatar',
             'phones.phoneBrand',
             'books',
         );
+        //dd($user->books);
         //compact создает массив из переменных по их ИМЕНАМ!! vvvvvvv
         return view('users.show', compact('user'));
     }
