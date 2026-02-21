@@ -526,7 +526,7 @@
                                 {{ $user->age }}
                             </td>
                             <td class="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">
-                                {{ $user->deleted_at->format('d.m.Y H:i') }}
+                                {{ $user->deleted_at ? $user->deleted_at->format('d.m.Y'): '' }}
                             </td>
                             <td class="px-6 py-4 text-right space-x-2">
                                 <form action="{{ route('users.restore', $user) }}" method="POST" class="inline">

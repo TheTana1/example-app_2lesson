@@ -9,18 +9,18 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //})->middleware('auth:sanctum');
 
-Route::prefix('users')->group(function () {
-   Route::get('/', [UserController::class, 'index'])->name('users.api.index');
-    Route::get('{user}', [UserController::class, 'show'])->name('users.api.show');
-    Route::post('/', [UserController::class, 'store']);
-    Route::patch('{user}', [UserController::class, 'update'])->name('users.api.update');
-    Route::delete('{user}', [UserController::class, 'destroy'])->name('users.api.destroy');
+Route::prefix('users')->name('api.users.')->group(function () {
+   Route::get('/', [UserController::class, 'index'])->name('index');
+    Route::get('{user}', [UserController::class, 'show'])->name('show');
+    Route::post('/', [UserController::class, 'store'])->name('store');
+    Route::patch('{user}', [UserController::class, 'update'])->name('update');
+    Route::delete('{user}', [UserController::class, 'destroy'])->name('destroy');
 });
 
-Route::prefix('books')->group(function () {
-    Route::get('/', [BookController::class, 'index'])->name('books.api.index');
-    Route::get('{book}', [BookController::class, 'show'])->name('books.api.show');
-    Route::post('', [BookController::class, 'store'])->name('books.api.store');
-    Route::patch('{book}', [BookController::class, 'update'])->name('books.api.update');
-    Route::delete('{book}', [BookController::class, 'destroy'])->name('books.api.destroy');
+Route::prefix('books')->name('api.books.')->group(function () {
+    Route::get('/', [BookController::class, 'index'])->name('index');
+    Route::get('{book}', [BookController::class, 'show'])->name('show');
+    Route::post('', [BookController::class, 'store'])->name('store');
+    Route::patch('{book}', [BookController::class, 'update'])->name('.update');
+    Route::delete('{book}', [BookController::class, 'destroy'])->name('destroy');
 });

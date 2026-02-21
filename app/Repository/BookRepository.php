@@ -12,7 +12,7 @@ class BookRepository
     final function store(BookRequest $request): Book
     {
 
-        $user = User::where('slug', $request->user_slug)->firstOrFail();
+        $user = User::slug($request->user_slug)->firstOrFail();
         $validated = $request->validated();
         return Book::query()->create([
                 'title' => $validated['title'],
@@ -22,7 +22,7 @@ class BookRepository
     }
     final function update(BookRequest $request, Book $book): Book
     {
-        $user = User::where('slug', $request->user_slug)->firstOrFail();
+        $user = User::slug($request->user_slug)->firstOrFail();
         $validated = $request->validated();
         $book->update([
             'title' => $validated['title'],

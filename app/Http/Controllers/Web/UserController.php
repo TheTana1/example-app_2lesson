@@ -83,7 +83,7 @@ class UserController extends Controller
                 ->paginate(10)
                 ->withQueryString(),
             'usersTrashed' => $this->userFilters
-                ->apply($request, $queryTrashed)
+                ->apply($request, $queryTrashed, true)
                 ->paginate(5)
                 ->withQueryString(),
         ]);

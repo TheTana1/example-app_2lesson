@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\MusicController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\BookController;
@@ -17,6 +18,8 @@ use Illuminate\Support\Facades\Route;
 //    return redirect()->route('users.index');
 //});
 Auth::routes();
+Route::redirect('/', 'users');
+
 
 Route::middleware([AuthAlways::class])->group(function () {
     // Ресурсы с полным набором методов (кроме delete, если нужно)
@@ -26,6 +29,16 @@ Route::middleware([AuthAlways::class])->group(function () {
     // Дополнительные маршруты для users
     Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
+
+
+// MUSIC CONTROLLER
+    Route::prefix('music')->name('music.')->group(function () {
+        Route::get('', [MusicController::class, 'index'])->name('index');
+        Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
+    });
+
+    //FAVORITES
+    Route::get('favorites', [UserController::class, 'favorites'])->name('users.favorites');
 });
 
 
