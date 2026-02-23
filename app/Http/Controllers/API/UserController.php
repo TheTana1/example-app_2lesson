@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use AllowDynamicProperties;
+use App\Filters\UserFilters;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserStoreRequest;
 use App\Http\Requests\UserUpdateRequest;
@@ -18,8 +19,10 @@ use Illuminate\Http\Resources\Json\JsonResource;
 class UserController extends Controller
 {
     private const PER_PAGE = 10;
+
     public function __construct(
-        UserRepository $userRepository
+        private UserRepository       $userRepository,
+        private readonly UserFilters $userFilters,
     )
     {
         $this->userRepository = $userRepository;
@@ -27,14 +30,16 @@ class UserController extends Controller
 
     public function index(Request $request): AnonymousResourceCollection
     {
-        $users = User::query()->
-            with([
-                'phones:id,number,user_id,phone_brand_id',
-                'phones.phoneBrand:id,name',
-                'avatar'])->
-            paginate($request->get('per_page', self::PER_PAGE));
+        $query = ['phones:id,number,user_id,phone_brand_id',
+            'phones.phoneBrand:id,name',
+            'avatar'];
+        $users = User::query()->with($query);
+        $usersTrashed = User::onlyTrashed()->with($query);
 
-        return UserResource::collection($users);
+        return UserResource::collection($this->userFilters
+            ->apply($request, $users)
+            ->paginate($request->get('per_page', self::PER_PAGE)));
+
     }
 
     public function show(User $user): UserResource
@@ -55,10 +60,11 @@ class UserController extends Controller
     {
         return new UserResource($this->userRepository->update($request, $user));
     }
-    public function destroy(User $user) : JsonResponse
+
+    public function destroy(User $user): JsonResponse
     {
-        return  response()->json([
-            'status' => $this->userRepository->destroy($user)? 'success' : 'failure',
+        return response()->json([
+            'status' => $this->userRepository->destroy($user) ? 'success' : 'failure',
         ]);
     }
 }

@@ -43,8 +43,15 @@ class UserTest extends TestCase
         $this->assertEquals($paginatedData['per_page'], $perPage);
         $this->assertEquals($paginatedData['current_page'], $page);
 
-        $filter = http_build_query(['search'=>])
-        dd($filter);
+        $filter = http_build_query([
+            'search'=> 'Always Auth User',
+            ]);
+        $responseFilter = $this->get('/api/users?' . $filter);
+        $responseFilter->assertStatus(200);
+        $filterData = $response->json()['data'];
+
+        dd($filterData);
+
 
 
 }
