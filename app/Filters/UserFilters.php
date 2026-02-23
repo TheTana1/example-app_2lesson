@@ -20,13 +20,13 @@ class UserFilters
                 $query->where('name', 'like', '%' . $request->get('search') . '%')
                     ->where('deleted_at', '=', null)
                     ->orWhere('email', 'like', '%' . $request->get('search') . '%')
-                    ->where('deleted_at', '=', null);
+                    ->whereNull('deleted_at');
             }
             else{
 
                 $query->where('name', 'like', '%'.$request->get('search').'%')
-
-                    ->orWhere('email', 'like', '%'.$request->get('search').'%');
+                    ->orWhere('email', 'like', '%'.$request->get('search').'%')
+                    ->whereNotNull('deleted_at');
             }
         }
         if($request->has('date_from') && $request->get('date_from') != null){
