@@ -34,6 +34,7 @@ class AuthAlways
                         'active' => rand(0, 1),
                         'age' => rand(16, 63),
                         'slug' => Str::slug('name'),
+                        'created_at' => '2026-02-21T19:41:55.000000Z',
                     ]);
                 }
 
