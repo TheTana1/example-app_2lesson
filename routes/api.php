@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Route;
 //    return $request->user();
 //})->middleware('auth:sanctum');
 
-Route::prefix('users')->name('api.users.')->group(function () {
+Route::prefix('users')->middleware('auth')->name('api.users.')->group(function () {
    Route::get('/', [UserController::class, 'index'])->name('index');
     Route::get('{user}', [UserController::class, 'show'])->name('show');
     Route::post('/', [UserController::class, 'store'])->name('store');
