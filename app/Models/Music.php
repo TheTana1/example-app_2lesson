@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Support\Carbon;
 
 class Music extends Model
 {
@@ -19,10 +20,10 @@ class Music extends Model
      * @property string $file_path
      * @property string $cover_path
      * @property integer $duration
-     * @property string $release_date
+     * @property Carbon $release_date
      * @property boolean $is_published
      * @property integer $plays
-     * @property string $genre
+     * @property integer $genre
      *
      */
     protected $fillable = [

@@ -21,7 +21,7 @@ return new class extends Migration
             $table->dateTime('release_date')->default(DB::raw('CURRENT_TIMESTAMP'));
             $table->boolean('is_published')->default(true);
             $table->unsignedInteger('plays');
-            $table->string('genre');
+            $table->unsignedTinyInteger('genre');
             $table->timestamps();
         });
     }

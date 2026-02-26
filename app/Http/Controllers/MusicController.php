@@ -13,7 +13,7 @@ class MusicController extends Controller
     public function index(): View
     {
         $tracks = Music::query()->paginate(self::PER_PAGE);
-        dd($tracks);
+        //dd($tracks);
         return view('music.index', ['tracks' => $tracks]);
     }
 
