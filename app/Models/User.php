@@ -4,6 +4,7 @@ namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -31,6 +32,7 @@ class User extends Authenticatable
      * @property integer $id
      * @property integer $age
      * @property boolean $active
+     * @property integer $role_id
      */
     /**
      * The attributes that are mass assignable.
@@ -44,6 +46,7 @@ class User extends Authenticatable
         'active',
         'age',
         'slug',
+        'role_id',
     ];
 
     /**
@@ -86,6 +89,11 @@ class User extends Authenticatable
     public function musics(): BelongsToMany
     {
         return $this->belongsToMany(Music::class);
+    }
+
+    public function role (): BelongsTo
+    {
+        return $this->belongsTo(Role::class);
     }
 
 //    public function favoriteMusic(): BelongsToMany

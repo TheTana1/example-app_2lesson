@@ -23,11 +23,11 @@ class UserSeeder extends Seeder
                 'email' => 'admin@mail.ru',
                 'password' => Hash::make('password'),
                 'slug' => Str::slug('admin'),
-//                'role_id' => Role::query()->where('slug', 'admin')->firstOrFail()->id,
+                'role_id' => Role::query()->where('slug', 'admin')->firstOrFail()->id,
             ]);
         }
         User::factory([
-            //'role_id' => Role::query()->where('slug', 'user')->firstOrFail()->id,
+
         ])
             ->has(Phone::factory()->count(3), 'phones')
             ->count(100)

@@ -26,8 +26,10 @@ class UserController extends Controller
         private readonly UserFilters $userFilters
     )
     {
+
         $this->userRepository = $userRepository;
     }
+
 
     public function index(Request $request): View
     {
@@ -127,6 +129,7 @@ class UserController extends Controller
             'avatar',
             'phones.phoneBrand',
             'books',
+            'role'
         );
         //dd($user->books);
         //compact создает массив из переменных по их ИМЕНАМ!! vvvvvvv

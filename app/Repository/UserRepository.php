@@ -21,8 +21,8 @@ class UserRepository
         try {
             $validatedData = $userStoreRequest->validated();
             $validatedData['slug'] = Str::slug($userStoreRequest->name);
+            $validatedData['role_id'] = 2;
             $user = User::query()->create($validatedData);
-
             if (!empty($validatedData['avatar'])) {
                 $filePath = 'storage/' . $userStoreRequest->
                     file('avatar')->

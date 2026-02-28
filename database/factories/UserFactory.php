@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\Role;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -25,6 +26,7 @@ class UserFactory extends Factory
             'active' => rand(0, 1),
             'age' => rand(16, 63),
             'slug' => Str::slug($name),
+            'role_id' => Role::query()->where('slug', 'user')->firstOrFail()->id,
         ];
     }
 
