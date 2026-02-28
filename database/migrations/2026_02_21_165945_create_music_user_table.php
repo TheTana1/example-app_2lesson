@@ -16,7 +16,10 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
         });
     }
-
+//            $table->morphs('favoritesable');
+//            $table->timestamps();
+//
+//            $table->unique(['user_id', 'favoritesable_id', 'favoritesable_type']);
     /**
      * Reverse the migrations.
      */

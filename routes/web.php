@@ -21,7 +21,9 @@ Auth::routes();
 Route::redirect('/', 'users');
 
 
-Route::middleware([AuthAlways::class])->group(function () {
+
+//Route::middleware([AuthAlways::class])->group(function ()
+ {
     // Ресурсы с полным набором методов (кроме delete, если нужно)
     Route::resource('users', UserController::class);
     Route::resource('books', BookController::class);
@@ -39,7 +41,9 @@ Route::middleware([AuthAlways::class])->group(function () {
 
     //FAVORITES
     Route::get('favorites', [UserController::class, 'favorites'])->name('users.favorites');
-});
+}
+//)
+;
 
 
 Route::get('/home', [HomeController::class, 'index'])

@@ -49,6 +49,10 @@ class Music extends Model
         return $this->belongsToMany(User::class);
     }
 
+//    public function favoritedBy(){
+//        return $this->belongsToMany(User::class, 'favorites')->withTimestamps();
+//    }
+
     public function isFavoritedBy(?User $user): bool
     {
         if (!$user) return false;
