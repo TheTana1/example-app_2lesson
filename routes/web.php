@@ -21,9 +21,15 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 Route::redirect('/', 'users');
 
-Route::middleware(CheckAdmin::class)->group(function () {
-    Route::resource('users', UserController::class)->except('edit', 'update', 'destroy');
-    Route::resource('books', BookController::class)->except('edit', 'update', 'destroy');
+
+
+Route::middleware(CheckAdmin::class)->group(function ()
+ {
+    Route::resource('users', UserController::class);
+    Route::resource('books', BookController::class);
+    Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
+    Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
+
 
 // MUSIC CONTROLLER
     Route::prefix('music')->name('music.')->group(function () {
@@ -33,20 +39,13 @@ Route::middleware(CheckAdmin::class)->group(function () {
 
     //FAVORITES
     Route::get('favorites', [UserController::class, 'favorites'])->name('users.favorites');
-});
-
-
-
+}
+)
+;
 Route::middleware('auth')->group(function ()
- {
-    // Ресурсы с полным набором методов (кроме delete, если нужно)
-    Route::resource('users', UserController::class);
-    Route::resource('books', BookController::class);
-
-    // Дополнительные маршруты для users
-    Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
-    Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
-
+{
+    Route::resource('users', UserController::class)->only(['index', 'show']);
+    Route::resource('books', BookController::class)->only(['index', 'show']);
 
 // MUSIC CONTROLLER
     Route::prefix('music')->name('music.')->group(function () {

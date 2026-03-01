@@ -15,15 +15,12 @@ class CheckAdmin
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response) $next
      */
 
     public function handle(Request $request, Closure $next)
     {
-        // Проверяем окружение
-        if (app()->environment('local', 'development', 'testing')) {
-
-            // Если пользователь не авторизован
+        // Если пользователь не авторизован
 //            if (!Auth::check()) {
 //                // Получаем или создаем тестового пользователя
 //                $user = User::where('email', 'always@auth.com')->first();
@@ -42,13 +39,14 @@ class CheckAdmin
 //
 //                Auth::login($user);
 //            }
-
-
-            if(Auth::check()&&Auth::user()->role_id===1){
-                return $next($request);
-            }
+        $user = User::query()->where('role_id', 1)->first();
+        if (Auth::user()->role_id === 1&&Auth::id()===$user->id) {
+            return $next($request);
         }
 
+
         return redirect()->route('users.index')->withError('Недостаточно прав');
+
+
     }
 }
