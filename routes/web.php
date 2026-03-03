@@ -25,10 +25,15 @@ Route::middleware(CheckAdmin::class)->group(function () {
 
     // MUSIC CONTROLLER
     Route::name('music.')->group(function () {
-        Route::resource('', MusicController::class);
+        Route::get('', [MusicController::class, 'index'])->name('index');
+        Route::get( 'create',[MusicController::class, 'create'])->name('create');
+        Route::post('store',[MusicController::class, 'store'])->name('store');
+        Route::get( '{music}',[MusicController::class, 'show'])->name('show');
+        Route::get( '{music}/edit',[MusicController::class, 'edit'])->name('edit');
+        Route::delete( '{music}',[MusicController::class, 'delete'])->name('delete');
+        Route::patch( '{music}',[MusicController::class, 'update'])->name('update');
         Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
         Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
-
     });
 
     Route::resource('users', UserController::class);

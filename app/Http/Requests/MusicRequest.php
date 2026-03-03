@@ -34,8 +34,8 @@ class MusicRequest extends FormRequest
         return [
             'title' => 'required|string|max:255',
             'artists' => 'required|string|max:255',
-            'file_path' => 'required|string|mimes:mp3,wav',
-            'cover_path' => 'nullable|string|mimes:jpg,jpeg,png',
+            'file_path' => 'required|file|mimes:mp3,wav',
+            'cover_path' => 'nullable|image|mimes:jpg,jpeg,png',
             'duration' => 'required|integer|min:1',
             'release_date' => 'required|date',
             'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],

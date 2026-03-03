@@ -56,4 +56,9 @@ enum MusicGenre: string
     {
         return array_column(self::cases(), 'value'  );
     }
+    public static function getLabel(string $value): string
+    {
+        $genre = self::tryFrom($value);
+        return $genre ? $genre->label() : 'Неизвестный жанр';
+    }
 }

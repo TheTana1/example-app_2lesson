@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
 use App\Http\Controllers\API\BookController;
 use App\Http\Controllers\API\UserController;
 use Illuminate\Support\Facades\Route;
@@ -24,3 +25,7 @@ Route::prefix('books')->name('api.books.')->group(function () {
     Route::patch('{book}', [BookController::class, 'update'])->name('.update');
     Route::delete('{book}', [BookController::class, 'destroy'])->name('destroy');
 });
+
+//Route::prefix('auth')->name('api.auth.')->group(function () {
+//    Route::post('login',AuthController::class)->name('login');
+//});
