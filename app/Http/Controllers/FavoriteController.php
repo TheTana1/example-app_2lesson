@@ -15,13 +15,12 @@ class FavoriteController extends Controller
     public function index(): View
     {
         $user = Auth::user();
-        $tracks = $user->musics()->paginate(10, self::PER_PAGE);
-
+        $tracks = $user->musics()->paginate(self::PER_PAGE);
 
         return view('music.index',
             [
                 'tracks' => $tracks,
-                'pageTitle' => 'Favorites Musics',
+                'pageTitle' => 'Favorite Music '. $user->name,
             ]);
 
     }
@@ -30,7 +29,7 @@ class FavoriteController extends Controller
     {
 //        $user = $request->user();
         $track = Music::query()->findOrFail($request->track_id);
-        $track->plays+=1;
+        return $track->plays+=1;
 
 
     }

@@ -46,11 +46,11 @@
         <div class="flex justify-between items-center h-16">
 
             <!-- Logo / Brand -->
-            <a href="#" class="flex items-center gap-3 font-bold text-xl text-indigo-600 dark:text-indigo-400">
+            <a href="./" class="flex items-center gap-3 font-bold text-xl text-indigo-600 dark:text-indigo-400">
                 <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
-                <span>Admin</span>
+                <span>Music Gallery</span>
             </a>
 
             <!-- Навигация (можно расширить) -->
@@ -58,6 +58,10 @@
                 <a href="{{ route('users.index') }}"
                    class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition">
                     Пользователи
+                </a>
+                <a href="{{route('favorites.index')}}"
+                   class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition">
+                    Плейлист
                 </a>
                 <a href="{{route('books.index')}}"
                    class="text-gray-700 dark:text-gray-300 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition">
@@ -112,7 +116,7 @@
     <div class="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600 dark:text-gray-400">
             <div>
-                © {{ date('Y') }} <span class="font-medium text-gray-900 dark:text-white">Admin Panel</span>. Все права защищены.
+                © {{ date('Y') }} <span class="font-medium text-gray-900 dark:text-white">Music Gallery</span>. Все права защищены.
             </div>
             <div class="flex gap-6">
                 <a href="#" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">Документация</a>

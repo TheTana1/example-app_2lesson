@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\MusicController;
 use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\UserController;
@@ -19,47 +20,46 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Auth::routes();
-Route::redirect('/', 'users');
 
+Route::middleware(CheckAdmin::class)->group(function () {
 
+    // MUSIC CONTROLLER
+    Route::name('music.')->group(function () {
+        Route::resource('', MusicController::class);
+        Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
+        Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
 
-Route::middleware(CheckAdmin::class)->group(function ()
- {
+    });
+
     Route::resource('users', UserController::class);
     Route::resource('books', BookController::class);
     Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 
 
-// MUSIC CONTROLLER
-    Route::prefix('music')->name('music.')->group(function () {
+    //FAVORITES
+    Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+}
+);
+Route::middleware('auth')->group(function () {
+
+    // MUSIC CONTROLLER
+    Route::name('music.')->group(function () {
         Route::get('', [MusicController::class, 'index'])->name('index');
         Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
+        Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
     });
 
-    //FAVORITES
-    Route::get('favorites', [UserController::class, 'favorites'])->name('users.favorites');
-}
-)
-;
-Route::middleware('auth')->group(function ()
-{
     Route::resource('users', UserController::class)->only(['index', 'show']);
     Route::resource('books', BookController::class)->only(['index', 'show']);
 
-// MUSIC CONTROLLER
-    Route::prefix('music')->name('music.')->group(function () {
-        Route::get('', [MusicController::class, 'index'])->name('index');
-        Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
-    });
 
-    //FAVORITES
-    Route::get('favorites', [UserController::class, 'favorites'])->name('users.favorites');
+    //FAVORITE CONTROLLER
+    Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 }
-)
-;
+);
 
 
 
-Route::get('/home', [HomeController::class, 'index'])
-    ->name('home');
+//Route::get('/home', [HomeController::class, 'index'])
+//    ->name('home');

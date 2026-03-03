@@ -5,8 +5,25 @@
 @section('content')
 
     <div class="container mx-auto px-4 py-8">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+            <div>
+                <h1 class="text-3xl font-bold mb-8">{{$pageTitle}}</h1>
+            </div>
 
-        <h1 class="text-3xl font-bold mb-8">Все треки</h1>
+            @auth
+                <a href="{{ route('music.create') }}"
+                   class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
+                  text-white font-medium rounded-lg shadow-md transition-all duration-200
+                  transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                    </svg>
+                    Добавить песню
+                </a>
+            @endauth
+        </div>
+
+
 
         @if ($tracks->isEmpty())
             <p class="text-gray-500 text-center py-12">Пока нет опубликованных треков...</p>
@@ -53,7 +70,7 @@
                             </div>
 
                             <div class="mt-3">
-                                <audio controls class="w-full h-10">
+                                <audio controls class="w-full h-10" data-track-id="{{ $track->id }}">
                                     <source src="{{ asset($track->file_path) }}" type="audio/mpeg">
                                     Ваш браузер не поддерживает аудио.
                                 </audio>
@@ -70,7 +87,8 @@
                                             <svg class="w-7 h-7 text-red-500"
                                                  fill="currentColor"
                                                  viewBox="0 0 24 24">
-                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                <path
+                                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                         </button>
                                     @else
@@ -92,6 +110,7 @@
                         </div>
 
                     </div>
+
                 @endforeach
 
             </div>
@@ -104,5 +123,68 @@
         @endif
 
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Объект для отслеживания отправленных запросов по каждому треку
+            const playedTracks = {};
 
+            // Находим все аудио элементы на странице
+            const audioElements = document.querySelectorAll('audio');
+
+            audioElements.forEach(audio => {
+                // Получаем ID трека из родительского элемента или data-атрибута
+                // Вам нужно будет добавить data-track-id к аудио элементу или найти его другим способом
+                let trackId = audio.dataset.trackId;
+                if (!trackId) return;
+
+                // Инициализируем отслеживание для этого трека
+                playedTracks[trackId] = false;
+
+                audio.addEventListener('timeupdate', function () {
+                    // Проверяем, не отправляли ли уже запрос для этого трека
+                    if (playedTracks[trackId]) return;
+
+                    const duration = this.duration;
+                    const currentTime = this.currentTime;
+
+                    // Проверяем, что длительность известна (не NaN) и больше 0
+                    if (!duration || duration <= 0) return;
+
+                    // Вычисляем 70% от длительности трека
+                    const seventyPercent = duration * 0.02 //0.7;
+
+                    // Если достигли 70% и запрос еще не отправлен
+                    if (currentTime >= seventyPercent) {
+                        // Отмечаем что запрос отправлен
+                        playedTracks[trackId] = true;
+                        console.log(213);
+                        // Отправляем запрос на сервер
+                        fetch("{{route('music.track.listen_progress')}}", {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || ''
+
+                            },
+                            body: JSON.stringify({
+                                track_id: trackId,
+                                played_percent: 0.02,  //0.7,
+                                duration: duration
+                            })
+                        })
+                            .then(response => {
+                                if (!response.ok) {
+                                    console.error('Ошибка при отправке статистики прослушивания');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Ошибка сети:', error);
+                            });
+                    }
+                });
+
+
+            });
+        });
+    </script>
 @endsection
