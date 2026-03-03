@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\MusicGenre;
 use Illuminate\Foundation\Http\FormRequest;
 
 class MusicRequest extends FormRequest
@@ -31,14 +32,14 @@ class MusicRequest extends FormRequest
 //    * @property integer $plays
 //    * @property integer $genre
         return [
-            'title' => 'required|string',
-            'artists' => 'required|string',
-            'file_path' => 'required|string',
-            'cover_path' => 'nullable|string',
-            'duration' => 'required|integer',
+            'title' => 'required|string|max:255',
+            'artists' => 'required|string|max:255',
+            'file_path' => 'required|string|mimes:mp3,wav',
+            'cover_path' => 'nullable|string|mimes:jpg,jpeg,png',
+            'duration' => 'required|integer|min:1',
             'release_date' => 'required|date',
-            'genre' => 'required|string',
-            'is_published' => 'nullable|boolean|default:false',
+            'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],
+            'is_published' => 'nullable|boolean',
 
             //
         ];

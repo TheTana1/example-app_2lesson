@@ -2,16 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\MusicRequest;
 use App\Models\Music;
+use App\MusicGenre;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use JetBrains\PhpStorm\NoReturn;
+use App\Repository\MusicRepository;
 
 class MusicController extends Controller
 {
+    public function __construct(private MusicRepository $musicRepository)
+    {
+        $this->musicRepository= $musicRepository;
+    }
     private const PER_PAGE = 10;
     public function index(): View
     {
@@ -25,7 +32,13 @@ class MusicController extends Controller
 
     public function create(): View
     {
-        return view('music.create');
+        return view('music.create',[
+            'genres' => MusicGenre::options(),
+        ]);
+    }
+    public function store(MusicRequest $request)
+    {
+        return redirect(route('music.index'))->with([$this->musicRepository->store($request)]);
     }
     public function saveFavorite(Music $music): RedirectResponse
     {

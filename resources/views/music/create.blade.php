@@ -189,17 +189,13 @@
                                            focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm px-4 py-2.5
                                            @error('genre') border-red-300 focus:border-red-500 focus:ring-red-500 @enderror">
                                     <option value="">Выберите жанр</option>
-                                    <option value="1" {{ old('genre') == 1 ? 'selected' : '' }}>Pop</option>
-                                    <option value="2" {{ old('genre') == 2 ? 'selected' : '' }}>Rock</option>
-                                    <option value="3" {{ old('genre') == 3 ? 'selected' : '' }}>Hip-Hop</option>
-                                    <option value="4" {{ old('genre') == 4 ? 'selected' : '' }}>Electronic</option>
-                                    <option value="5" {{ old('genre') == 5 ? 'selected' : '' }}>Jazz</option>
-                                    <option value="6" {{ old('genre') == 6 ? 'selected' : '' }}>Classical</option>
-                                    <option value="7" {{ old('genre') == 7 ? 'selected' : '' }}>R&B</option>
-                                    <option value="8" {{ old('genre') == 8 ? 'selected' : '' }}>Country</option>
-                                    <option value="9" {{ old('genre') == 9 ? 'selected' : '' }}>Metal</option>
-                                    <option value="10" {{ old('genre') == 10 ? 'selected' : '' }}>Other</option>
-                                </select>
+                                    @foreach($genres as $genre)
+                                        <option value="{{ $genre['value'] }}"
+                                            {{ old('genre') == $genre['value'] ? 'selected' : '' }}>
+                                            {{ $genre['label'] }}
+                                        </option>
+                                    @endforeach
+                                    </select>
 
                                 @error('genre')
                                 <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
