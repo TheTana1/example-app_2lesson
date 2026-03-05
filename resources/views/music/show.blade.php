@@ -10,11 +10,12 @@
             <div class="flex items-center justify-between">
                 <div>
                     <nav class="flex items-center text-sm text-gray-500 dark:text-gray-400 mb-2">
-                        <a href="{{ route('music.index') }}" class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">
+                        <a href="{{ route('music.index') }}"
+                           class="hover:text-indigo-600 dark:hover:text-indigo-400 transition">
                             Музыка
                         </a>
                         <svg class="w-4 h-4 mx-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                         </svg>
                         <span class="text-gray-700 dark:text-gray-300 font-medium">{{ $track->title }}</span>
                     </nav>
@@ -28,26 +29,31 @@
 
                 <div class="flex items-center gap-3">
                     <!-- Кнопка редактирования -->
-                    <a href="{{ route('music.edit', $track->id) }}"
-                       class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600
-                              text-white font-medium rounded-lg transition-colors shadow-md">
-                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Редактировать
-                    </a>
+                    @auth
+                        @if(Auth::user()->isAdmin())
+                            <a href="{{ route('music.edit', $track->id) }}"
+                               class="inline-flex items-center px-4 py-2 bg-amber-500 hover:bg-amber-600
+                                  text-white font-medium rounded-lg transition-colors shadow-md">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                </svg>
+                                Редактировать
+                            </a>
+                        @endif
+                    @endauth
 
                     <!-- Кнопка удаления -->
-                    <form action="{{ route('music.delete', $track->id) }}" method="POST" onsubmit="return confirm('Вы уверены, что хотите удалить этот трек?')">
+                    <form action="{{ route('music.delete', $track->id) }}" method="POST"
+                          onsubmit="return confirm('Вы уверены, что хотите удалить этот трек?')">
                         @csrf
                         @method('DELETE')
                         <button type="submit"
                                 class="inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600
-                                       text-white font-medium rounded-lg transition-colors shadow-md">
+                                           text-white font-medium rounded-lg transition-colors shadow-md">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                             </svg>
                             Удалить
                         </button>
@@ -55,8 +61,8 @@
 
                     <a href="{{ route('music.index') }}"
                        class="inline-flex items-center px-4 py-2 bg-gray-200 dark:bg-gray-700
-                              hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
-                              font-medium rounded-lg transition-colors">
+                                  hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200
+                                  font-medium rounded-lg transition-colors">
                         ← Назад
                     </a>
                 </div>
@@ -67,7 +73,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Левая колонка: обложка и информация -->
             <div class="md:col-span-1">
-                <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden sticky top-8">
+                <div
+                    class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden sticky top-8">
                     <!-- Обложка -->
                     <div class="aspect-square relative">
                         @if ($track->cover_path)
@@ -76,16 +83,17 @@
                                  class="w-full h-full object-cover">
                         @else
                             <div class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600
-                                        flex items-center justify-center">
+                                            flex items-center justify-center">
                                 <span class="text-white text-8xl opacity-40">♪</span>
                             </div>
                         @endif
 
                         <!-- Длительность в углу -->
-                        <div class="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1.5 rounded-full backdrop-blur-sm">
+                        <div
+                            class="absolute bottom-4 right-4 bg-black/70 text-white text-sm px-3 py-1.5 rounded-full backdrop-blur-sm">
                             <svg class="w-4 h-4 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             {{ gmdate('i:s', $track->duration) }}
                         </div>
@@ -94,74 +102,76 @@
                     <!-- Статистика -->
                     <div class="p-6 space-y-4">
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                </svg>
-                                Прослушиваний
-                            </span>
+                                <span class="text-gray-600 dark:text-gray-400 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                    </svg>
+                                    Прослушиваний
+                                </span>
                             <span class="font-bold text-indigo-600 dark:text-indigo-400 text-lg">
-                                {{ number_format($track->plays) }}
-                            </span>
+                                    {{ number_format($track->plays) }}
+                                </span>
                         </div>
 
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                </svg>
-                                Дата релиза
-                            </span>
+                                <span class="text-gray-600 dark:text-gray-400 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                    Дата релиза
+                                </span>
                             <span class="font-medium text-gray-900 dark:text-white">
-                                {{ \Carbon\Carbon::parse($track->release_date)->format('d.m.Y') }}
-                            </span>
+                                    {{ \Carbon\Carbon::parse($track->release_date)->format('d.m.Y') }}
+                                </span>
                         </div>
 
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-5-5A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
-                                </svg>
-                                Жанр
-                            </span>
+                                <span class="text-gray-600 dark:text-gray-400 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l5 5a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-5-5A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                                    </svg>
+                                    Жанр
+                                </span>
                             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-                                         bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
-                                {{ $track->genre ?? 'Неизвестный жанр' }}
-                            </span>
+                                             bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200">
+                                    {{ $track->genre ?? 'Неизвестный жанр' }}
+                                </span>
                         </div>
 
                         <div class="flex items-center justify-between text-sm">
-                            <span class="text-gray-600 dark:text-gray-400 flex items-center">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
-                                </svg>
-                                Статус
-                            </span>
+                                <span class="text-gray-600 dark:text-gray-400 flex items-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"/>
+                                    </svg>
+                                    Статус
+                                </span>
                             <span class="inline-flex items-center">
-                                @if($track->is_published)
+                                    @if($track->is_published)
                                     <span class="flex items-center text-green-600 dark:text-green-400">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Опубликован
-                                    </span>
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Опубликован
+                                        </span>
                                 @else
                                     <span class="flex items-center text-gray-500 dark:text-gray-400">
-                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                        </svg>
-                                        Черновик
-                                    </span>
+                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor"
+                                                 viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                      d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Черновик
+                                        </span>
                                 @endif
-                            </span>
+                                </span>
                         </div>
                     </div>
                 </div>
@@ -170,12 +180,14 @@
             <!-- Правая колонка: плеер и детали -->
             <div class="md:col-span-2 space-y-6">
                 <!-- Карточка плеера -->
-                <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div
+                    class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="p-6">
                         <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 mr-2 text-indigo-500" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                      d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"/>
                             </svg>
                             Аудиоплеер
                         </h2>
@@ -185,7 +197,8 @@
                             <div class="flex items-center gap-4 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg">
                                 <div class="flex-1">
                                     <div class="font-medium text-gray-900 dark:text-white">{{ $track->title }}</div>
-                                    <div class="text-sm text-gray-600 dark:text-gray-400">{{ implode(', ', $track->artists) }}</div>
+                                    <div
+                                        class="text-sm text-gray-600 dark:text-gray-400">{{ implode(', ', $track->artists) }}</div>
                                 </div>
                                 <div class="text-sm text-gray-500 dark:text-gray-400">
                                     {{ gmdate('i:s', $track->duration) }}
@@ -208,21 +221,23 @@
                                             <button type="submit"
                                                     title="Убрать из избранного"
                                                     class="p-3 bg-white dark:bg-gray-700 rounded-full shadow-md hover:shadow-lg
-                                                           hover:bg-red-50 dark:hover:bg-gray-600 transition-all
-                                                           transform hover:scale-110 active:scale-95 group">
+                                                               hover:bg-red-50 dark:hover:bg-gray-600 transition-all
+                                                               transform hover:scale-110 active:scale-95 group">
                                                 <svg class="w-6 h-6 text-red-500 group-hover:text-red-600"
                                                      fill="currentColor" viewBox="0 0 24 24">
-                                                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                                    <path
+                                                        d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                                 </svg>
                                             </button>
                                         @else
                                             <button type="submit"
                                                     title="Добавить в избранное"
                                                     class="p-3 bg-white dark:bg-gray-700 rounded-full shadow-md hover:shadow-lg
-                                                           hover:bg-red-50 dark:hover:bg-gray-600 transition-all
-                                                           transform hover:scale-110 active:scale-95 group">
+                                                               hover:bg-red-50 dark:hover:bg-gray-600 transition-all
+                                                               transform hover:scale-110 active:scale-95 group">
                                                 <svg class="w-6 h-6 text-gray-400 group-hover:text-red-400"
-                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+                                                     fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                                     stroke-width="2">
                                                     <path stroke-linecap="round" stroke-linejoin="round"
                                                           d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                                 </svg>
@@ -234,11 +249,12 @@
                                     <a href="{{ asset($track->file_path) }}"
                                        download
                                        class="p-3 bg-white dark:bg-gray-700 rounded-full shadow-md hover:shadow-lg
-                                              hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all
-                                              transform hover:scale-110 active:scale-95 group">
-                                        <svg class="w-6 h-6 text-gray-400 group-hover:text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                  hover:bg-indigo-50 dark:hover:bg-gray-600 transition-all
+                                                  transform hover:scale-110 active:scale-95 group">
+                                        <svg class="w-6 h-6 text-gray-400 group-hover:text-indigo-500" fill="none"
+                                             stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                                  d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
                                         </svg>
                                     </a>
                                 </div>
@@ -247,9 +263,9 @@
                                 <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
                                     <svg class="w-5 h-5 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                                     </svg>
                                     {{ number_format($track->plays) }} прослушиваний
                                 </div>
@@ -259,12 +275,14 @@
                 </div>
 
                 <!-- Карточка с дополнительной информацией -->
-                <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+                <div
+                    class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
                     <div class="p-6">
                         <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
-                            <svg class="w-6 h-6 mr-2 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg class="w-6 h-6 mr-2 text-indigo-500" fill="none" stroke="currentColor"
+                                 viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                             </svg>
                             Детальная информация
                         </h2>
@@ -304,14 +322,14 @@
 
     <!-- Скрипт для отслеживания прослушиваний -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const audio = document.querySelector('audio[data-track-id]');
             if (!audio) return;
 
             const trackId = audio.dataset.trackId;
             let played = false;
 
-            audio.addEventListener('timeupdate', function() {
+            audio.addEventListener('timeupdate', function () {
                 if (played) return;
 
                 const duration = this.duration;

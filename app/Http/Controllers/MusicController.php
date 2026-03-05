@@ -38,11 +38,7 @@ class MusicController extends Controller
         ]);
     }
 
-    public function store(MusicRequest $request): RedirectResponse
-    {
-        $newMusic = $this->musicRepository->store($request);
-        return redirect()->route('music.show', $newMusic->id);
-    }
+
 
     public function saveFavorite(Music $music): RedirectResponse
     {
@@ -72,6 +68,12 @@ class MusicController extends Controller
         ]);
     }
 
+    public function store(MusicRequest $request): RedirectResponse
+    {
+        $newMusic = $this->musicRepository->store($request);
+        return redirect()->route('music.show', $newMusic->id);
+    }
+
     public function delete(int $musicId): RedirectResponse
     {
         $track = Music::findOrFail($musicId);
@@ -94,8 +96,22 @@ class MusicController extends Controller
             'status' => 'success',]);
     }
 
-    public function update(Music $music)
+    public function update(MusicRequest $request, Music $music): RedirectResponse
     {
-
+        // Временная отладка - посмотрим, приходят ли данные
+        dd([
+            'method' => $request->method(),
+            'url' => $request->fullUrl(),
+            'route_name' => $request->route() ? $request->route()->getName() : 'no route',
+            'route_params' => $request->route() ? $request->route()->parameters() : [],
+            'all_data' => $request->all(),
+            'has_files' => $request->hasFile('cover_path') || $request->hasFile('file_path'),
+            'files' => $request->allFiles(),
+            'ajax' => $request->ajax(),
+            'wants_json' => $request->wantsJson(),
+        ]);
+        $oldTrack = Music::query()->findOrFail($musicId);
+        $newTrack = $this->musicRepository->update($request, $oldTrack);
+        return redirect()->route('music.show',$newTrack);
     }
 }

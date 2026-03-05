@@ -90,7 +90,7 @@ class MusicSeeder extends Seeder
 
         // Генерируем хешированное имя (md5 + оригинальный расширение)
         $extension = pathinfo($filePath, PATHINFO_EXTENSION);
-        $hashedName = md5($filePath . time()) . '.' . $extension;
+        $hashedName = md5($filePath) . '.' . $extension;
 
         // Сохраняем в storage/app/public/music
         $storagePath = $folderName . '/' . $hashedName;

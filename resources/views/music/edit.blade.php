@@ -1,4 +1,3 @@
-
 @extends('layouts.main')
 
 @section('title', 'Редактировать трек • ' . $track->title)
@@ -61,41 +60,133 @@
                     @enderror
                 </div>
 
-                <!-- Остальные поля — только просмотр / disabled -->
-                <div class="space-y-6 mb-10">
+                <!-- Медиа-файлы с возможностью замены -->
+                <div class="space-y-8 mb-10">
 
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Обложка (с возможностью замены) -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                            Обложка трека
+                        </label>
 
-                        <!-- Обложка (просмотр) -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Обложка
-                            </label>
-                            <div class="relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
-                                @if ($track->cover_path)
-                                    <img src="{{ asset($track->cover_path) }}" alt="Обложка" class="w-full h-full object-cover">
-                                @else
-                                    <div class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                                        <span class="text-white text-6xl opacity-40">♪</span>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Текущая обложка -->
+                            <div class="md:col-span-1">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Текущая обложка:</p>
+                                <div class="relative aspect-square rounded-lg overflow-hidden bg-gray-100 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                                    @if ($track->cover_path)
+                                        <img src="{{ asset($track->cover_path) }}" alt="Обложка" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="w-full h-full bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
+                                            <span class="text-white text-6xl opacity-40">♪</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- Загрузка новой обложки -->
+                            <div class="md:col-span-2">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Загрузить новую обложку:</p>
+                                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                                    <input type="file"
+                                           name="cover_path"
+                                           id="cover_path"
+                                           accept="image/*"
+                                           class="hidden"
+                                           onchange="previewCover(this)">
+
+                                    <label for="cover_path" class="cursor-pointer">
+                                        <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                        </svg>
+                                        <span class="text-indigo-600 dark:text-indigo-400 font-medium">Нажмите для выбора</span>
+                                        <span class="text-gray-500 dark:text-gray-400 block text-sm mt-1">или перетащите файл сюда</span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500 block mt-2">JPG, PNG, GIF, WEBP (макс. 2 МБ)</span>
+                                    </label>
+
+                                    <!-- Превью новой обложки -->
+                                    <div id="cover_preview_container" class="mt-4 hidden">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Новая обложка:</p>
+                                        <img id="cover_preview" src="#" alt="Превью" class="max-h-32 mx-auto rounded-lg border border-gray-300 dark:border-gray-600">
                                     </div>
-                                @endif
+                                </div>
+                                @error('cover_path')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                    * Оставьте пустым, чтобы оставить текущую обложку
+                                </p>
                             </div>
                         </div>
-
-                        <!-- Аудио файл (просмотр) -->
-                        <div>
-                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                Аудиофайл
-                            </label>
-                            <audio controls class="w-full mt-1">
-                                <source src="{{ asset($track->file_path) }}" type="audio/mpeg">
-                            </audio>
-                        </div>
-
                     </div>
 
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <!-- Аудио файл (с возможностью замены) -->
+                    <div class="border border-gray-200 dark:border-gray-700 rounded-lg p-5">
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-4">
+                            Аудиофайл
+                        </label>
 
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            <!-- Текущий аудиофайл -->
+                            <div class="md:col-span-1">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Текущий файл:</p>
+                                <div class="bg-gray-100 dark:bg-gray-900/50 rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+                                    <div class="flex items-center gap-2 mb-2">
+                                        <svg class="w-8 h-8 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                                        </svg>
+                                        <span class="text-sm text-gray-700 dark:text-gray-300 truncate">
+                                            {{ basename($track->file_path) }}
+                                        </span>
+                                    </div>
+                                    <audio controls class="w-full mt-1">
+                                        <source src="{{ asset($track->file_path) }}" type="audio/mpeg">
+                                    </audio>
+                                </div>
+                            </div>
+
+                            <!-- Загрузка нового аудиофайла -->
+                            <div class="md:col-span-2">
+                                <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Загрузить новый файл:</p>
+                                <div class="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-indigo-500 transition">
+                                    <input type="file"
+                                           name="file_path"
+                                           id="file_path"
+                                           accept="audio/mpeg,audio/mp3,audio/wav,audio/ogg"
+                                           class="hidden"
+                                           onchange="updateAudioName(this)">
+
+                                    <label for="file_path" class="cursor-pointer">
+                                        <svg class="w-12 h-12 mx-auto text-gray-400 dark:text-gray-500 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15.536a5 5 0 001.414 1.414m2.828-9.9a9 9 0 012.828-2.828" />
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h8m-4-4v8" />
+                                        </svg>
+                                        <span class="text-indigo-600 dark:text-indigo-400 font-medium">Нажмите для выбора</span>
+                                        <span class="text-gray-500 dark:text-gray-400 block text-sm mt-1">или перетащите файл сюда</span>
+                                        <span class="text-xs text-gray-400 dark:text-gray-500 block mt-2">MP3, WAV, OGG (макс. 10 МБ)</span>
+                                    </label>
+
+                                    <!-- Информация о новом файле -->
+                                    <div id="audio_info" class="mt-4 hidden">
+                                        <p class="text-xs text-gray-500 dark:text-gray-400 mb-2">Новый файл:</p>
+                                        <div class="bg-indigo-50 dark:bg-indigo-900/30 rounded-lg p-3">
+                                            <p id="audio_filename" class="text-sm text-gray-700 dark:text-gray-300 font-medium"></p>
+                                            <p id="audio_filesize" class="text-xs text-gray-500 dark:text-gray-400 mt-1"></p>
+                                        </div>
+                                    </div>
+                                </div>
+                                @error('file_path')
+                                <p class="mt-2 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+                                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                                    * Оставьте пустым, чтобы оставить текущий аудиофайл
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Остальные поля (только просмотр) -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                         <div>
                             <label class="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
                                 Длительность
@@ -127,7 +218,6 @@
                             <input type="text" value="{{ number_format($track->plays) }}" disabled
                                    class="w-full px-4 py-2.5 bg-gray-100 dark:bg-gray-900/50 border border-gray-300 dark:border-gray-600 rounded-lg text-gray-700 dark:text-gray-300 cursor-not-allowed">
                         </div>
-
                     </div>
                 </div>
 
@@ -146,7 +236,52 @@
 
             </form>
         </div>
-
     </div>
+
+    <!-- JavaScript для предпросмотра -->
+    <script>
+        function previewCover(input) {
+            const previewContainer = document.getElementById('cover_preview_container');
+            const preview = document.getElementById('cover_preview');
+
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    previewContainer.classList.remove('hidden');
+                }
+
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                previewContainer.classList.add('hidden');
+            }
+        }
+
+        function updateAudioName(input) {
+            const audioInfo = document.getElementById('audio_info');
+            const filenameSpan = document.getElementById('audio_filename');
+            const filesizeSpan = document.getElementById('audio_filesize');
+
+            if (input.files && input.files[0]) {
+                const file = input.files[0];
+                filenameSpan.textContent = file.name;
+
+                // Форматирование размера файла
+                const size = file.size;
+                if (size < 1024) {
+                    filesizeSpan.textContent = size + ' Б';
+                } else if (size < 1024 * 1024) {
+                    filesizeSpan.textContent = (size / 1024).toFixed(1) + ' КБ';
+                } else {
+                    filesizeSpan.textContent = (size / (1024 * 1024)).toFixed(1) + ' МБ';
+                }
+
+                audioInfo.classList.remove('hidden');
+            } else {
+                audioInfo.classList.add('hidden');
+            }
+        }
+    </script>
 
 @endsection

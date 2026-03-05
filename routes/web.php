@@ -32,6 +32,8 @@ Route::middleware(CheckAdmin::class)->group(function () {
         Route::get( '{music}/edit',[MusicController::class, 'edit'])->name('edit');
         Route::delete( '{music}',[MusicController::class, 'delete'])->name('delete');
         Route::patch( '{music}',[MusicController::class, 'update'])->name('update');
+        Route::put( '{music}',[MusicController::class, 'update'])->name('update');
+
         Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
         Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
     });

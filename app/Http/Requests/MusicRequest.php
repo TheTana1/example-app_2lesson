@@ -31,17 +31,32 @@ class MusicRequest extends FormRequest
 //    * @property boolean $is_published
 //    * @property integer $plays
 //    * @property integer $genre
-        return [
-            'title' => 'required|string|max:255',
-            'artists' => 'required|string|max:255',
-            'file_path' => 'required|file|mimes:mp3,wav',
-            'cover_path' => 'nullable|image|mimes:jpg,jpeg,png',
-            'duration' => 'required|integer|min:1',
-            'release_date' => 'required|date',
-            'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],
-            'is_published' => 'nullable|boolean',
+        switch ($this->method()) {
+            case 'POST':
+                return [
+                    'title' => 'required|string|max:255',
+                    'artists' => 'required|string|max:255',
+                    'file_path' => 'required|file|mimes:mp3,wav',
+                    'cover_path' => 'nullable|image|mimes:jpg,jpeg,png',
+                    'duration' => 'required|integer|min:1',
+                    'release_date' => 'required|date',
+                    'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],
+                    'is_published' => 'nullable|boolean',
 
-            //
-        ];
+                    //
+                ];
+            case 'PATCH':
+                return [
+                    'title' => 'required|string|max:255',
+                    'artists' => 'required|string|max:255',
+                    'file_path' => 'nullable|file|mimes:mp3,wav',
+                    'cover_path' => 'nullable|image|mimes:jpg,jpeg,png',
+                    'duration' => 'required|integer|min:1',
+                    'release_date' => 'required|date',
+                    'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],
+                    'is_published' => 'nullable|boolean',
+                ];
+        }
+        return [];
     }
 }
