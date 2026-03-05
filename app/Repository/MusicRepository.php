@@ -57,8 +57,10 @@ class MusicRepository
 
             // Обработка artists
             if (isset($request->artists)) {
-                $validatedData['artists'] = explode(',', trim($request->artists));
-
+                $validatedData['artists'] = explode(',', $request->artists);
+                for ($i = 0; $i < count($validatedData['artists']); $i++) {
+                    $validatedData['artists'][$i] = trim($validatedData['artists'][$i]);
+                }
             }
 
             $validatedData['plays'] = 0;
@@ -154,23 +156,29 @@ class MusicRepository
             else{
                 $validatedData['file_path'] = $oldMusic->file_path;
             }
-
+            //dd($request->all());
             // Обработка artists
-            if (isset($request->artists)) {
-                $validatedData['artists'] = explode(',', $request->artists);
+            if (isset($request->artists_string)) {
+                $validatedData['artists'] = explode(',', $request->artists_string);
+                for ($i = 0; $i < count($validatedData['artists']); $i++) {
+                    $validatedData['artists'][$i] = trim($validatedData['artists'][$i]);
+                }
+
             }
             else {
                 $validatedData['artists'] = $oldMusic->artists;
+
             }
 
             $validatedData['plays'] = $oldMusic->plays;
             $validatedData['genre'] = $oldMusic->genre;
 
-            $music = Music::query()->create($validatedData);
+            $oldMusic->update($validatedData);
+            $oldMusic->refresh();
 
             DB::commit();
 
-            return $music;
+            return $oldMusic;
 
         } catch (\Exception $exception) {
             DB::rollBack();

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Filters\MusicFilters;
 use App\Http\Requests\MusicRequest;
 use App\Models\Music;
 use App\MusicGenre;
@@ -14,20 +15,27 @@ use App\Repository\MusicRepository;
 
 class MusicController extends Controller
 {
-    public function __construct(private MusicRepository $musicRepository)
+    public function __construct(private MusicRepository $musicRepository,
+    readonly MusicFilters $musicFilters)
     {
         $this->musicRepository = $musicRepository;
     }
 
     private const PER_PAGE = 10;
 
-    public function index(): View
+    public function index(Request $request): View
     {
-        $tracks = Music::query()->paginate(self::PER_PAGE);
+
+
+        $tracks = Music::query();
+
         //dd($tracks);
         return view('music.index', [
-            'tracks' => $tracks,
+            'tracks' => $this->musicFilters
+                ->apply($request,$tracks)->paginate(self::PER_PAGE),
             'pageTitle' => 'All Music',
+            'genres' => MusicGenre::options(),
+
         ]);
     }
 
@@ -70,6 +78,7 @@ class MusicController extends Controller
 
     public function store(MusicRequest $request): RedirectResponse
     {
+       // dd(trim(explode(',', $request->artists)[1]));
         $newMusic = $this->musicRepository->store($request);
         return redirect()->route('music.show', $newMusic->id);
     }

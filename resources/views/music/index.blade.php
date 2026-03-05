@@ -7,10 +7,10 @@
     <div class="container mx-auto px-4 py-8">
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
             <div>
-                <h1 class="text-3xl font-bold mb-8">{{$pageTitle}}</h1>
+                <h1 class="text-3xl font-bold mb-2">{{$pageTitle}}</h1>
             </div>
-            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
-                @auth
+            @auth
+                @if(Auth::user()->isAdmin())
                     <a href="{{ route('music.create') }}"
                        class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
                   text-white font-medium rounded-lg shadow-md transition-all duration-200
@@ -20,10 +20,105 @@
                         </svg>
                         Добавить песню
                     </a>
-                @endauth
+                @endif
+            @endauth
+        </div>
+
+        <!-- Форма фильтрации -->
+        <div class="bg-white dark:bg-gray-800 rounded-xl shadow-md p-6 mb-8 border border-gray-200 dark:border-gray-700">
+            <h2 class="text-lg font-semibold mb-4 text-gray-700 dark:text-gray-300">Фильтры</h2>
+
+            <form action="{{ route('music.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <!-- Поиск по названию -->
+                <div>
+                    <label for="title" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Название трека
+                    </label>
+                    <input type="text"
+                           name="title"
+                           id="title"
+                           value="{{ request('title') }}"
+                           placeholder="Введите название..."
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                </div>
+
+                <!-- Поиск по исполнителю -->
+                <div>
+                    <label for="artist" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Исполнитель
+                    </label>
+                    <input type="text"
+                           name="artist"
+                           id="artist"
+                           value="{{ request('artist') }}"
+                           placeholder="Введите имя исполнителя..."
+                           class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                </div>
+{{--                @dd($genres[0])--}}
+                <!-- Фильтр по жанру -->
+                <div>
+                    <label for="genre" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                        Жанр
+                    </label>
+                    <select name="genre"
+                            id="genre"
+                            class="w-full px-4 py-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition">
+                        <option value="">Все жанры</option>
+
+                        @foreach($genres as $genre)
+                            <option value="{{ $genre['value'] }}" {{ request('genre') == $genre ? 'selected' : '' }}>
+                                {{ $genre['label'] }}
+                            </option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <!-- Кнопки действий -->
+                <div class="flex items-end gap-2">
+                    <button type="submit"
+                            class="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-lg shadow-md transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                        <svg class="w-5 h-5 inline mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                        </svg>
+                        Найти
+                    </button>
+
+                    <a href="{{ route('music.index') }}"
+                       class="px-4 py-2 bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-600 text-gray-800 dark:text-gray-200 font-medium rounded-lg shadow-md transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </a>
+                </div>
+            </form>
+
+            <!-- Отображение активных фильтров -->
+            @if(request()->anyFilled(['title', 'artist', 'genre']))
+                <div class="mt-4 flex flex-wrap items-center gap-2 text-sm">
+                    <span class="text-gray-600 dark:text-gray-400">Активные фильтры:</span>
+
+                    @if(request('title'))
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">
+                            Название: "{{ request('title') }}"
+                        </span>
+                    @endif
+
+                    @if(request('artist'))
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">
+                            Исполнитель: "{{ request('artist') }}"
+                        </span>
+                    @endif
+
+                    @if(request('genre'))
+                        <span class="inline-flex items-center px-3 py-1 rounded-full bg-indigo-100 dark:bg-indigo-900/30 text-indigo-700 dark:text-indigo-400">
+                            Жанр: {{ $genres[request('genre')] ?? request('genre') }}
+                        </span>
+                    @endif
+                </div>
             @endif
         </div>
-        @if(session()->has('success'))
+
+    @if(session()->has('success'))
             <div class="m-5 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800
                         rounded-lg text-green-700 dark:text-green-400">
                 <div class="flex items-center">
