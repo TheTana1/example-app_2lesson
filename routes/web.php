@@ -35,7 +35,7 @@ Route::middleware(CheckAdmin::class)->group(function () {
         Route::get('', [MusicController::class, 'index'])->name('index');
         Route::get( 'create',[MusicController::class, 'create'])->name('create');
         Route::post('store',[MusicController::class, 'store'])->name('store');
-        Route::get( '{music}',[MusicController::class, 'show'])->name('show');
+        Route::get( '{id}',[MusicController::class, 'show'])->name('show');
         Route::get( '{music}/edit',[MusicController::class, 'edit'])->name('edit');
         Route::delete( '{music}',[MusicController::class, 'destroy'])->name('destroy');
         Route::patch( '{music}',[MusicController::class, 'update'])->name('update');

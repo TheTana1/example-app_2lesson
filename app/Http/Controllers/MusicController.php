@@ -61,7 +61,7 @@ class MusicController extends Controller
         return redirect()->back();
     }
 
-    public function show(Music $music): View
+    public function show(int $musicId): View
     {
 
         return view('music.show', [
