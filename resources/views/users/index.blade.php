@@ -17,17 +17,19 @@
                 </p>
             </div>
 
-            @auth
-                <a href="{{ route('users.create') }}"
-                   class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
+            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                @auth
+                    <a href="{{ route('users.create') }}"
+                       class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
                   text-white font-medium rounded-lg shadow-md transition-all duration-200
                   transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Добавить пользователя
-                </a>
-            @endauth
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Добавить пользователя
+                    </a>
+                @endauth
+            @endif
         </div>
 
         <!-- Filters Section -->
@@ -518,10 +520,10 @@
                                 <div class="flex items-center">
                                     <div class="flex-shrink-0 h-10 w-10">
 
-                                            <div class="h-10 w-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600
+                                        <div class="h-10 w-10 rounded-full bg-gradient-to-br from-red-500 to-pink-600
                                     flex items-center justify-center text-white font-bold">
-                                                {{ strtoupper(mb_substr($user->name, 0, 1)) }}
-                                            </div>
+                                            {{ strtoupper(mb_substr($user->name, 0, 1)) }}
+                                        </div>
 
                                     </div>
                                     <div class="ml-4">
@@ -550,7 +552,8 @@
                                     </button>
                                 </form>
 
-                                <form action="{{ route('users.force-delete', $user->slug) }}" method="POST" class="inline">
+                                <form action="{{ route('users.force-delete', $user->slug) }}" method="POST"
+                                      class="inline">
                                     @csrf
                                     @method('DELETE')
                                     <button type="submit"
@@ -572,12 +575,12 @@
                     </tbody>
                 </table>
             </div>
-                <!-- Pagination -->
-                @if ($users->hasPages())
-                    <div class="px-6 py-5 border-t border-gray-200 dark:border-gray-700">
-                        {{ $users->appends(request()->query())->links('pagination::tailwind') }}
-                    </div>
-                @endif
+            <!-- Pagination -->
+            @if ($users->hasPages())
+                <div class="px-6 py-5 border-t border-gray-200 dark:border-gray-700">
+                    {{ $users->appends(request()->query())->links('pagination::tailwind') }}
+                </div>
+            @endif
         </div>
 
 

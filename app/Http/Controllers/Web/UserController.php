@@ -33,50 +33,6 @@ class UserController extends Controller
 
     public function index(Request $request): View
     {
-        //        dd(User::withTrashed()->get()); // с мягким удалением
-//        $user =Auth::user();
-//        $page = 3;
-//        $perPage = 10;
-//        $usersIds = [
-//            33, 66, 99
-//        ];
-//
-//
-//        dd(
-//            DB::table('users')->
-//            join('phones', 'users.id', '=', 'phones.user_id')->
-//            get(),
-//
-//            DB::table('users')->select(['id', 'name', 'email', 'avatar'])->
-//            take(10)->orderByDesc('id')->get()
-//,
-//            User::query()->select(['id', 'name', 'email', 'avatar'])->
-//            take(10)->orderByDesc('id')->get(),
-
-//            User::query()->skip($page * $perPage - $perPage)->
-//            take($perPage)->get(),
-
-//            User::query()->select('id', 'name')->
-//            whereIn('id', $usersIds)->get()->toArray(),
-
-//            User::query()->select('id', 'name')->
-//            whereIn('id', $usersIds)->sum('id'),
-
-//            User::query()->select('id', 'name')->
-//            whereIn('id', $usersIds)->count(),
-
-//            User::query()->select('id', 'name')->
-//            has('phones')->get(),
-
-//            User::query()->select('id', 'name')->
-//            doesntHave('phones')->get(),
-
-//            User::query()->with('phones')->whereHas('phones', function ($filter){
-//                $filter->where('number', '+1-341-439-2098');
-//            })
-        //);
-
-
         $query = User::query()->with('phones.phoneBrand');
         $queryTrashed = User::onlyTrashed()->with('phones.phoneBrand');
         return view('users.index', [

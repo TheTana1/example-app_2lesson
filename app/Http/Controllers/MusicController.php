@@ -53,18 +53,18 @@ class MusicController extends Controller
         return redirect()->back();
     }
 
-    public function show(int $musicId): View
+    public function show(Music $music): View
     {
 
         return view('music.show', [
-            'track' => Music::query()->findOrFail($musicId),
+            'track' =>  $music,
         ]);
     }
 
-    public function edit(int $musicId)
+    public function edit(Music $music)
     {
         return view('music.edit', [
-            'track' => Music::query()->findOrFail($musicId),
+            'track' =>  $music,
         ]);
     }
 
@@ -74,10 +74,10 @@ class MusicController extends Controller
         return redirect()->route('music.show', $newMusic->id);
     }
 
-    public function delete(int $musicId): RedirectResponse
+    public function destroy(Music $music): RedirectResponse
     {
-        $track = Music::findOrFail($musicId);
-        if ($this->musicRepository->destroy($track))
+
+        if ($this->musicRepository->destroy($music))
             return redirect()->route('music.index')
                 ->with('success', 'Successfully deleted music!');
         return redirect()->route('music.index')
@@ -98,20 +98,8 @@ class MusicController extends Controller
 
     public function update(MusicRequest $request, Music $music): RedirectResponse
     {
-        // Временная отладка - посмотрим, приходят ли данные
-        dd([
-            'method' => $request->method(),
-            'url' => $request->fullUrl(),
-            'route_name' => $request->route() ? $request->route()->getName() : 'no route',
-            'route_params' => $request->route() ? $request->route()->parameters() : [],
-            'all_data' => $request->all(),
-            'has_files' => $request->hasFile('cover_path') || $request->hasFile('file_path'),
-            'files' => $request->allFiles(),
-            'ajax' => $request->ajax(),
-            'wants_json' => $request->wantsJson(),
-        ]);
-        $oldTrack = Music::query()->findOrFail($musicId);
-        $newTrack = $this->musicRepository->update($request, $oldTrack);
+
+        $newTrack = $this->musicRepository->update($request, $music);
         return redirect()->route('music.show',$newTrack);
     }
 }

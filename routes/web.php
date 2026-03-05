@@ -23,14 +23,21 @@ Auth::routes();
 
 Route::middleware(CheckAdmin::class)->group(function () {
 
-    // MUSIC CONTROLLER
+//    // MUSIC CONTROLLER
+//    Route::resource('music', MusicController::class);
+//    Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
+//    Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
+    Route::resource('users', UserController::class);
+    Route::resource('books', BookController::class);
+    Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+
     Route::name('music.')->group(function () {
         Route::get('', [MusicController::class, 'index'])->name('index');
         Route::get( 'create',[MusicController::class, 'create'])->name('create');
         Route::post('store',[MusicController::class, 'store'])->name('store');
         Route::get( '{music}',[MusicController::class, 'show'])->name('show');
         Route::get( '{music}/edit',[MusicController::class, 'edit'])->name('edit');
-        Route::delete( '{music}',[MusicController::class, 'delete'])->name('delete');
+        Route::delete( '{music}',[MusicController::class, 'destroy'])->name('destroy');
         Route::patch( '{music}',[MusicController::class, 'update'])->name('update');
         Route::put( '{music}',[MusicController::class, 'update'])->name('update');
 
@@ -38,21 +45,21 @@ Route::middleware(CheckAdmin::class)->group(function () {
         Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
     });
 
-    Route::resource('users', UserController::class);
-    Route::resource('books', BookController::class);
+
     Route::post('users/{user}/restore', [UserController::class, 'restore'])->name('users.restore');
     Route::delete('users/{user}/force-delete', [UserController::class, 'forceDelete'])->name('users.force-delete');
 
 
     //FAVORITES
-    Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
 }
 );
+
 Route::middleware('auth')->group(function () {
 
     // MUSIC CONTROLLER
     Route::name('music.')->group(function () {
         Route::get('', [MusicController::class, 'index'])->name('index');
+        Route::get('{music}', [MusicController::class, 'show'])->name('show');
         Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
         Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
     });

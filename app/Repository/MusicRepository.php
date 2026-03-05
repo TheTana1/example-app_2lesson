@@ -122,70 +122,49 @@ class MusicRepository
         $fileCoverPath = null;
 
         try {
-            dd(123);
-            if (!$request->hasFile('cover_path')){
-                $request->cover_path = $oldMusic->cover_path;
-            }
-            if ($request->hasFile('file_path')){
-                dd(public_path($oldMusic->cover_path));
-                $request->file_path = file_path;
-            }
             $validatedData = $request->validated();
+
+
+//            if (empty($validatedData['cover_path'])) {
+//                $validatedData['cover_path'] = $oldMusic->cover_path;
+//            }
+//            if (empty($validatedData['file_path'])) {
+//                $validatedData['file_path'] = $oldMusic->file_path;
+//            }
 
             // Обработка загрузки обложки
             if ($request->hasFile('cover_path')) {
-
                 $extension = $request->file('cover_path')->getClientOriginalExtension();
                 $hashedName = md5_file($request->file('cover_path')->getRealPath()) . '.' . $extension;
-                dd(public_path($oldMusic->cover_path),$fileCoverPath = '/storage/cover/' . $hashedName);
-
-
-                if (!Storage::disk('public')->exists('cover/' . $hashedName)) {
-                    //удаление старой обложки
-                    if (file_exists(public_path($oldMusic->cover_path))) {
-                        File::delete(public_path($oldMusic->cover_path));
-                    }
-
-                    $fileCoverPath = '/storage/' . $request->file('cover_path')->storeAs('cover', $hashedName, 'public');
-                } else {
-
-                    $fileCoverPath = '/storage/cover/' . $hashedName;
-                }
-
+                File::delete(public_path($oldMusic->cover_path));
+                $fileCoverPath = '/storage/' . $request->file('cover_path')->storeAs('cover', $hashedName, 'public');
                 $validatedData['cover_path'] = $fileCoverPath;
             }
-
-
+            else{
+                $validatedData['cover_path'] = $oldMusic->cover_path;
+            }
             // Обработка загрузки аудио файла
             if ($request->hasFile('file_path')) {
                 $extension = $request->file('file_path')->getClientOriginalExtension();
                 $hashedName = md5_file($request->file('file_path')->getRealPath()) . '.' . $extension;
-
-                if (!Storage::disk('public')->exists('music/' . $hashedName)) {
-                    //удаление старой обложки
-                    if (file_exists(public_path($oldMusic->file_path))) {
-                        File::delete(public_path($oldMusic->file_path));
-                    }
-
-
-                    $fileAudioPath = '/storage/' . $request->file('file_path')->storeAs('music', $hashedName, 'public');
-                } else {
-                    $fileAudioPath = '/storage/music/' . $hashedName;
-                }
-
+                File::delete(public_path($oldMusic->file_path));
+                $fileAudioPath = '/storage/' . $request->file('file_path')->storeAs('music', $hashedName, 'public');
                 $validatedData['file_path'] = $fileAudioPath;
-            } else {
-                throw new \Exception('Аудио файл не загружен');
+            }
+            else{
+                $validatedData['file_path'] = $oldMusic->file_path;
             }
 
             // Обработка artists
             if (isset($request->artists)) {
-                $validatedData['artists'] = explode(',', trim($request->artists));
-
+                $validatedData['artists'] = explode(',', $request->artists);
+            }
+            else {
+                $validatedData['artists'] = $oldMusic->artists;
             }
 
-            $validatedData['plays'] = 0;
-            $validatedData['genre'] = $request->genre;
+            $validatedData['plays'] = $oldMusic->plays;
+            $validatedData['genre'] = $oldMusic->genre;
 
             $music = Music::query()->create($validatedData);
 

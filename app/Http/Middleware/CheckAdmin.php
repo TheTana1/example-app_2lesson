@@ -39,13 +39,15 @@ class CheckAdmin
 //
 //                Auth::login($user);
 //            }
-        $user = User::query()->where('role_id', 1)->first();
-        if (Auth::user()->role_id === 1&&Auth::id()===$user->id) {
+        if (!Auth::check()) {
+            return redirect()->route('login')->withError('Необходимо войти в систему');
+        }
+        if (Auth::user()->isAdmin()) {
             return $next($request);
         }
 
 
-        return redirect()->route('users.index')->withError('Недостаточно прав');
+        return redirect()->route('music.index')->withError('Недостаточно прав');
 
 
     }

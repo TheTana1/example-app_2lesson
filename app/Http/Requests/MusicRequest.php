@@ -47,14 +47,10 @@ class MusicRequest extends FormRequest
                 ];
             case 'PATCH':
                 return [
-                    'title' => 'required|string|max:255',
-                    'artists' => 'required|string|max:255',
+                    'title' => 'nullable|string|max:255',
+                    'artists' => 'nullable|string|max:255',
                     'file_path' => 'nullable|file|mimes:mp3,wav',
                     'cover_path' => 'nullable|image|mimes:jpg,jpeg,png',
-                    'duration' => 'required|integer|min:1',
-                    'release_date' => 'required|date',
-                    'genre' => ['required', 'string', 'in:' . implode(',', MusicGenre::values())],
-                    'is_published' => 'nullable|boolean',
                 ];
         }
         return [];

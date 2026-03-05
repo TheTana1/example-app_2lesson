@@ -9,18 +9,19 @@
             <div>
                 <h1 class="text-3xl font-bold mb-8">{{$pageTitle}}</h1>
             </div>
-
-            @auth
-                <a href="{{ route('music.create') }}"
-                   class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
+            @if(\Illuminate\Support\Facades\Auth::user()->isAdmin())
+                @auth
+                    <a href="{{ route('music.create') }}"
+                       class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
                   text-white font-medium rounded-lg shadow-md transition-all duration-200
                   transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
-                    </svg>
-                    Добавить песню
-                </a>
-            @endauth
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/>
+                        </svg>
+                        Добавить песню
+                    </a>
+                @endauth
+            @endif
         </div>
         @if(session()->has('success'))
             <div class="m-5 p-4 bg-green-50 dark:bg-green-900/30 border border-green-200 dark:border-green-800
@@ -148,7 +149,7 @@
                                 </a>
 
                                 @if(auth()->user()->isAdmin())
-                                    <form action="{{ route('music.delete', $track->id) }}" method="POST"
+                                    <form action="{{ route('music.destroy', $track->id) }}" method="POST"
                                           onsubmit="return confirm('Удалить трек «{{ $track->title }}»?');">
                                         @csrf
                                         @method('DELETE')
