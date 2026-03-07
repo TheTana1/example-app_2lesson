@@ -10,13 +10,14 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use App\Repository\MusicRepository;
 
 class MusicController extends Controller
 {
     public function __construct(private MusicRepository $musicRepository,
-    readonly MusicFilters $musicFilters)
+                                readonly MusicFilters   $musicFilters)
     {
         $this->musicRepository = $musicRepository;
     }
@@ -25,14 +26,22 @@ class MusicController extends Controller
 
     public function index(Request $request): View
     {
+        $page = $request->get('page', 1);
+        $filtersString = implode(',',$request->all() ?? '');
+//        if(!Cache::has("music_page_{$page}_{$filtersString}"))
+//        {
+        $tracks = Cache::remember(
+                "music_page_{$page}_{$filtersString}",
+                60,
+                fn()=>$this->musicFilters
+                    ->apply($request, Music::query())
+                    ->paginate(self::PER_PAGE),
+                //fn()=>Music::query()->paginate(self::PER_PAGE)
+            );
+        //}
 
-
-        $tracks = Music::query();
-
-        //dd($tracks);
         return view('music.index', [
-            'tracks' => $this->musicFilters
-                ->apply($request,$tracks)->paginate(self::PER_PAGE),
+            'tracks' => $tracks,
             'pageTitle' => 'All Music',
             'genres' => MusicGenre::options(),
 
@@ -45,7 +54,6 @@ class MusicController extends Controller
             'genres' => MusicGenre::options(),
         ]);
     }
-
 
 
     public function saveFavorite(Music $music): RedirectResponse
@@ -63,29 +71,51 @@ class MusicController extends Controller
 
     public function show(int $musicId): View
     {
+        //dd(getUserByCache());
+
+
+        if (Cache::has('music_' . $musicId)) {
+
+            return view('music.show', [
+                'track' => Cache::get('music_' . $musicId)
+            ]);
+        }
+        $music = Music::query()->findOrFail($musicId);
+        Cache::put('music_' . $musicId, $music, now()->addMinutes(10));
 
         return view('music.show', [
-            'track' =>  $music,
+            'track' => $music,
         ]);
     }
 
-    public function edit(Music $music)
+    public function edit(int $musicId)
     {
+        if (Cache::has('music_' . $musicId)) {
+
+            return view('music.edit', [
+                'track' => Cache::get('music_' . $musicId)
+            ]);
+        }
+        $music = Music::query()->findOrFail($musicId);
+        Cache::put('music_' . $musicId, $music, now()->addMinutes(10));
+
         return view('music.edit', [
-            'track' =>  $music,
+            'track' => $music,
         ]);
     }
 
     public function store(MusicRequest $request): RedirectResponse
     {
-       // dd(trim(explode(',', $request->artists)[1]));
+        // dd(trim(explode(',', $request->artists)[1]));
         $newMusic = $this->musicRepository->store($request);
         return redirect()->route('music.show', $newMusic->id);
     }
 
-    public function destroy(Music $music): RedirectResponse
+    public function destroy(int $musicId): RedirectResponse
     {
+        $music = Music::query()->findOrFail($musicId);
 
+        Cache::forget('music_' . $musicId);
         if ($this->musicRepository->destroy($music))
             return redirect()->route('music.index')
                 ->with('success', 'Successfully deleted music!');
@@ -105,10 +135,12 @@ class MusicController extends Controller
             'status' => 'success',]);
     }
 
-    public function update(MusicRequest $request, Music $music): RedirectResponse
+    public function update(MusicRequest $request, int $musicId): RedirectResponse
     {
+        $music = Music::query()->findOrFail($musicId);
 
         $newTrack = $this->musicRepository->update($request, $music);
-        return redirect()->route('music.show',$newTrack);
+        Cache::put('music_'. $musicId, $newTrack, now()->addMinutes(10));
+        return redirect()->route('music.show', $newTrack);
     }
 }

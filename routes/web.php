@@ -36,10 +36,10 @@ Route::middleware(CheckAdmin::class)->group(function () {
         Route::get( 'create',[MusicController::class, 'create'])->name('create');
         Route::post('store',[MusicController::class, 'store'])->name('store');
         Route::get( '{id}',[MusicController::class, 'show'])->name('show');
-        Route::get( '{music}/edit',[MusicController::class, 'edit'])->name('edit');
+        Route::get( '{id}/edit',[MusicController::class, 'edit'])->name('edit');
         Route::delete( '{music}',[MusicController::class, 'destroy'])->name('destroy');
-        Route::patch( '{music}',[MusicController::class, 'update'])->name('update');
-        Route::put( '{music}',[MusicController::class, 'update'])->name('update');
+        Route::patch( '{id}',[MusicController::class, 'update'])->name('update');
+        Route::put( '{id}',[MusicController::class, 'update'])->name('update');
 
         Route::post('save/favorite/{music}', [MusicController::class, 'saveFavorite'])->name('save.favorite');
         Route::post('track/listen-progress', [MusicController::class, 'trackListenProgress'])->name('track.listen_progress');
