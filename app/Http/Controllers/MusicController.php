@@ -26,19 +26,28 @@ class MusicController extends Controller
 
     public function index(Request $request): View
     {
+        $user = Auth::user();
         $page = $request->get('page', 1);
-        $filtersString = implode(',',$request->all() ?? '');
-//        if(!Cache::has("music_page_{$page}_{$filtersString}"))
-//        {
+        $filtersString = implode(',',$request->all() ?? '').$user->id;
+
+        //обновляем кеш новых этих как там.......избранных песен в индексе
+        //т.к слишком будет нагружено делать по другому+ у пользователя
+        //есть шанс передумать пока он на странице избранного
+        Cache::put(
+            "favorite_music_page_{$page}_{$filtersString}",
+            $this->musicFilters
+                ->apply($request, $user->musics()->getQuery())
+            ->paginate(self::PER_PAGE)->withQueryString(),
+            60
+        );//очень тяжело думать о том как это всё рвботает
         $tracks = Cache::remember(
                 "music_page_{$page}_{$filtersString}",
                 60,
                 fn()=>$this->musicFilters
                     ->apply($request, Music::query())
                     ->paginate(self::PER_PAGE),
-                //fn()=>Music::query()->paginate(self::PER_PAGE)
             );
-        //}
+
 
         return view('music.index', [
             'tracks' => $tracks,
@@ -60,18 +69,14 @@ class MusicController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->musics()->where('id', $music->id)->exists()) {
-            $user->musics()->detach($music->id);
-        } else {
-            $user->musics()->attach($music->id);
-        }
+        $user->musics()->toggle($music->id);
 
         return redirect()->back();
     }
 
     public function show(int $musicId): View
     {
-        //dd(getUserByCache());
+
 
 
         if (Cache::has('music_' . $musicId)) {
@@ -106,7 +111,6 @@ class MusicController extends Controller
 
     public function store(MusicRequest $request): RedirectResponse
     {
-        // dd(trim(explode(',', $request->artists)[1]));
         $newMusic = $this->musicRepository->store($request);
         return redirect()->route('music.show', $newMusic->id);
     }
