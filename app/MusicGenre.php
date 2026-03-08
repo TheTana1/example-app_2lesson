@@ -3,6 +3,8 @@
 
 namespace App;
 
+use Illuminate\Support\Facades\Cache;
+
 enum MusicGenre: string
 {
     case POP = 'pop';
@@ -44,12 +46,15 @@ enum MusicGenre: string
 
     public static function options(): array
     {
-        return array_map(
-            fn($case) => [
-                'value' => $case->value,
-                'label' => $case->label(),
-            ],
-            self::cases()
+        return Cache::remember('music_genres_options', 120,
+            function() {
+                return array_map(
+                    fn($case) => [
+                        'value' => $case->value,
+                        'label' => $case->label(),
+                    ],
+                    self::cases());
+            }
         );
     }
     public static function values(): array

@@ -17,52 +17,10 @@ class MusicFilters
         if ($request->has('artist') && $request->get('artist') != null) {
             $query->where('artists', 'like', '%' . $request->artist . '%');
         }
-        switch ($request->get('genre')) {
-            case 'pop':
-                $query->where('genre', 'pop');
-                break;
-            case 'rock':
-                $query->where('genre', 'rock');
-                break;
-            case 'hip_hop':
-                $query->where('genre', 'hip_hop');
-                break;
+        if($request->has('genre') && $request->get('genre') != null)
+            $query->where('genre',$request->get('genre'));
 
-            case 'rap':
-                $query->where('genre', 'rap');
-                break;
 
-            case 'jazz':
-                $query->where('genre', 'jazz');
-                break;
-            case 'blues':
-                $query->where('genre', 'blues');
-                break;
-            case 'classical':
-                $query->where('genre', 'classical');
-                break;
-            case 'house':
-                $query->where('genre', 'house');
-                break;
-            case 'techno':
-                $query->where('genre', 'techno');
-                break;
-            case 'rnb':
-                $query->where('genre', 'rnb');
-                break;
-            case 'metal':
-                $query->where('genre', 'metal');
-                break;
-            case 'reggae':
-                $query->where('genre', 'reggae');
-                break;
-            case 'country':
-                $query->where('genre', 'country');
-                break;
-            case 'soundtrack':
-                $query->where('genre', 'soundtrack');
-                break;
-        }
         return $query;
     }
 

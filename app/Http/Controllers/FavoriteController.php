@@ -24,18 +24,15 @@ class FavoriteController extends Controller
         $user = Auth::user();
         $page = $request->get('page', 1);
         $filtersString = implode(',',$request->all() ?? '').$user->id;
-//        Cache::put(
-//            "favorite_music_page_{$page}_{$filtersString}",
-//            $this->musicFilters
-//                ->apply($request, $user->musics()->getQuery())
-//                ->paginate(self::PER_PAGE),
-//
-//            60
-//        );
+        $favoriteMusic= Cache::remember(
+            "favorite_music_page_{$page}_{$filtersString}",
+            60, fn()=> $this->musicFilters
+                ->apply($request, $user->musics()->getQuery())
+                ->paginate(self::PER_PAGE)
+        );
         return view('music.index',
             [
-                'tracks' => Cache::get(
-                    "favorite_music_page_{$page}_{$filtersString}"),
+                'tracks' =>$favoriteMusic,
                 'pageTitle' => 'Favorite Music '. $user->name,
                 'genres' => MusicGenre::options(),
             ]);

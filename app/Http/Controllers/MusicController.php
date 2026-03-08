@@ -24,27 +24,19 @@ class MusicController extends Controller
 
     private const PER_PAGE = 10;
 
+
     public function index(Request $request): View
     {
         $user = Auth::user();
         $page = $request->get('page', 1);
         $filtersString = implode(',',$request->all() ?? '').$user->id;
 
-        //обновляем кеш новых этих как там.......избранных песен в индексе
-        //т.к слишком будет нагружено делать по другому+ у пользователя
-        //есть шанс передумать пока он на странице избранного
-        Cache::put(
-            "favorite_music_page_{$page}_{$filtersString}",
-            $this->musicFilters
-                ->apply($request, $user->musics()->getQuery())
-            ->paginate(self::PER_PAGE)->withQueryString(),
-            60
-        );//очень тяжело думать о том как это всё рвботает
         $tracks = Cache::remember(
                 "music_page_{$page}_{$filtersString}",
                 60,
                 fn()=>$this->musicFilters
                     ->apply($request, Music::query())
+                    ->with('users')
                     ->paginate(self::PER_PAGE),
             );
 
@@ -65,20 +57,21 @@ class MusicController extends Controller
     }
 
 
-    public function saveFavorite(Music $music): RedirectResponse
+    public function saveFavorite(Request $request, Music $music): RedirectResponse
     {
         $user = Auth::user();
+        $page = $request->get('page', 1);
+        $filtersString = implode(',',$request->all() ?? '').$user->id;
 
         $user->musics()->toggle($music->id);
+        Cache::forget(
+            "favorite_music_page_{$page}_{$filtersString}");
 
         return redirect()->back();
     }
 
     public function show(int $musicId): View
     {
-
-
-
         if (Cache::has('music_' . $musicId)) {
 
             return view('music.show', [
@@ -132,10 +125,11 @@ class MusicController extends Controller
     {
 
         //$user = $request->user();
-        $track = Music::query()->findOrFail($request->track_id);
-        $track->plays += 1;
-        $track->save();
-        return response()->json(['plays' => $track->plays,
+        $music = Music::query()->findOrFail($request->track_id);
+        $music->plays += 1;
+        $music->save();
+        Cache::put('music_'. $music->id, $music, 120);
+        return response()->json(['plays' => $music->plays,
             'status' => 'success',]);
     }
 
@@ -144,7 +138,6 @@ class MusicController extends Controller
         $music = Music::query()->findOrFail($musicId);
 
         $newTrack = $this->musicRepository->update($request, $music);
-        Cache::put('music_'. $musicId, $newTrack, now()->addMinutes(10));
         return redirect()->route('music.show', $newTrack);
     }
 }

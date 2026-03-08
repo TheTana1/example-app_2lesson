@@ -20,25 +20,7 @@ class CheckAdmin
 
     public function handle(Request $request, Closure $next)
     {
-        // Если пользователь не авторизован
-//            if (!Auth::check()) {
-//                // Получаем или создаем тестового пользователя
-//                $user = User::where('email', 'always@auth.com')->first();
-//
-//                if (!$user) {
-//                    $user = User::create([
-//                        'name' => 'Always Auth User',
-//                        'email' => 'always@auth.com',
-//                        'password' => bcrypt('password'),
-//                        'active' => rand(0, 1),
-//                        'age' => rand(16, 63),
-//                        'slug' => Str::slug('name'),
-//                        'created_at' => '2026-02-21T19:41:55.000000Z',
-//                    ]);
-//                }
-//
-//                Auth::login($user);
-//            }
+
         if (!Auth::check()) {
             return redirect()->route('login')->withError('Необходимо войти в систему');
         }
