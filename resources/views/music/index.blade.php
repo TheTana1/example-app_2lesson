@@ -10,7 +10,7 @@
                 <h1 class="text-3xl font-bold mb-2">{{$pageTitle}}</h1>
             </div>
             @auth
-                @if(Auth::user()->isAdmin())
+                @if($user->isAdmin())
                     <a href="{{ route('music.create') }}"
                        class="inline-flex items-center px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700
                   text-white font-medium rounded-lg shadow-md transition-all duration-200
@@ -66,7 +66,7 @@
                         <option value="">Все жанры</option>
 
                         @foreach($genres as $genre)
-                            <option value="{{ $genre['value'] }}" {{ request('genre') == $genre ? 'selected' : '' }}>
+                            <option value="{{ $genre['value'] }}" {{ request('genre') == $genre['value'] ? 'selected' : '' }}>
                                 {{ $genre['label'] }}
                             </option>
                         @endforeach
@@ -200,15 +200,12 @@
                             <div class="mt-3 flex justify-end">
                                 <form action="{{ route('music.save.favorite', $track->id) }}" method="POST">
                                     @csrf
-                                    @if (in_array($track->id, auth()->user()?->musics->pluck('id')->toArray() ?? []))
+                                    @if (in_array($track->id, $favoriteIds ?? []))
                                         <button type="submit"
                                                 title="Убрать из избранного"
                                                 class="p-2.5 bg-white/80 dark:bg-gray-900/80 rounded-full shadow-md hover:bg-white dark:hover:bg-gray-800 transition-all transform hover:scale-110 active:scale-95">
-                                            <svg class="w-7 h-7 text-red-500"
-                                                 fill="currentColor"
-                                                 viewBox="0 0 24 24">
-                                                <path
-                                                    d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+                                            <svg class="w-7 h-7 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                                                <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
                                             </svg>
                                         </button>
                                     @else
@@ -216,10 +213,7 @@
                                                 title="Добавить в избранное"
                                                 class="p-2.5 bg-white/80 dark:bg-gray-900/80 rounded-full shadow-md hover:bg-white dark:hover:bg-gray-800 transition-all transform hover:scale-110 active:scale-95">
                                             <svg class="w-7 h-7 text-gray-400 hover:text-red-400"
-                                                 fill="none"
-                                                 stroke="currentColor"
-                                                 viewBox="0 0 24 24"
-                                                 stroke-width="2">
+                                                 fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
                                                 <path stroke-linecap="round" stroke-linejoin="round"
                                                       d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
                                             </svg>
@@ -243,7 +237,7 @@
                                     </button>
                                 </a>
 
-                                @if(auth()->user()->isAdmin())
+                                @if($user->isAdmin())
                                     <form action="{{ route('music.destroy', $track->id) }}" method="POST"
                                           onsubmit="return confirm('Удалить трек «{{ $track->title }}»?');">
                                         @csrf

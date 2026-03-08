@@ -12,7 +12,7 @@ class MusicObserver
      */
     public function created(Music $music): void
     {
-        //
+        Cache::put('music_'. $music->id, $music, now()->addMinutes(10));
     }
 
     /**
@@ -29,7 +29,7 @@ class MusicObserver
      */
     public function deleted(Music $music): void
     {
-        //
+        Cache::forget('music_' . $music->id);
     }
 
     /**

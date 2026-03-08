@@ -6,6 +6,7 @@ use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 use function Laravel\Prompts\error;
@@ -24,6 +25,9 @@ class CheckAdmin
         if (!Auth::check()) {
             return redirect()->route('login')->withError('Необходимо войти в систему');
         }
+//        if ($request->routeIs('logout') && Auth::check()) {
+//            Cache::flush();
+//        }
         if (Auth::user()->isAdmin()) {
             return $next($request);
         }

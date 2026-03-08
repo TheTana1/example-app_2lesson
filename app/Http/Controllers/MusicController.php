@@ -29,24 +29,31 @@ class MusicController extends Controller
     {
         $user = Auth::user();
         $page = $request->get('page', 1);
-        $filtersString = implode(',',$request->all() ?? '').$user->id;
+        $filtersString = implode(',',$request->all() ?? '')."_{$page}_".$user->id;
 
-        $tracks = Cache::remember(
-                "music_page_{$page}_{$filtersString}",
-                60,
-                fn()=>$this->musicFilters
-                    ->apply($request, Music::query())
-                    ->with('users')
-                    ->paginate(self::PER_PAGE),
-            );
+        $data = Cache::remember($filtersString, now()->addMinutes(10), function() use ($request, $user) {
+            // Получаем треки с пользователями (для проверки избранного)
+            $tracks = $this->musicFilters
+                ->apply($request, Music::query())
+                ->with(['users' => function($query) use ($user) {
+                    $query->where('user_id', $user->id);
+                }])
+                ->paginate(self::PER_PAGE)
+                ->withQueryString();
 
+            // Получаем ID избранных треков для быстрой проверки
+            $favoriteIds = $user->musics()->pluck('music_id')->toArray();
 
-        return view('music.index', [
-            'tracks' => $tracks,
-            'pageTitle' => 'All Music',
-            'genres' => MusicGenre::options(),
+            return [
+                'tracks' => $tracks,
+                'favoriteIds' => $favoriteIds,
+                'user' => $user,
+                'genres' => MusicGenre::options(),
+                'pageTitle' => 'All Music',
+            ];
+        });
 
-        ]);
+        return view('music.index', $data);
     }
 
     public function create(): View
@@ -112,7 +119,7 @@ class MusicController extends Controller
     {
         $music = Music::query()->findOrFail($musicId);
 
-        Cache::forget('music_' . $musicId);
+
         if ($this->musicRepository->destroy($music))
             return redirect()->route('music.index')
                 ->with('success', 'Successfully deleted music!');

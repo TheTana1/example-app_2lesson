@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 
 
@@ -99,12 +100,16 @@ class User extends Authenticatable
 
     public function isAdmin(): bool
     {
-        return $this->role->slug === 'admin';
+        return Cache::remember("user_is_admin_{$this->id}", 3600, function() {
+            return $this->role()->where('slug', 'admin')->exists();
+        });
     }
 
     public function isUser(): bool
     {
-        return $this->role->slug === 'user';
+        return Cache::remember("user_is_user_{$this->id}", 3600, function() {
+            return $this->role()->where('slug', 'user')->exists();
+        });
     }
 
 //    public function favoriteMusic(): BelongsToMany
