@@ -6,6 +6,7 @@ use App\Filters\MusicFilters;
 use App\Http\Requests\MusicRequest;
 use App\Models\Music;
 use App\MusicGenre;
+use App\Services\CacheService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,44 +17,38 @@ use App\Repository\MusicRepository;
 
 class MusicController extends Controller
 {
-    public function __construct(private MusicRepository $musicRepository,
-                                readonly MusicFilters   $musicFilters)
+    public function __construct(
+        private MusicRepository $musicRepository,
+        readonly MusicFilters   $musicFilters,
+        readonly CacheService $cacheService)
     {
         $this->musicRepository = $musicRepository;
     }
 
-    private const PER_PAGE = 10;
+
 
 
     public function index(Request $request): View
     {
+        //Cache::flush();
         $user = Auth::user();
         $page = $request->get('page', 1);
-        $filtersString = implode(',',$request->all() ?? '')."_{$page}_".$user->id;
+        //dd("music_page_{$page}",new Music);
+        $filtersString = implode(',', $request->all() ?? '') . "_{$page}_";
 
-        $data = Cache::remember($filtersString, now()->addMinutes(10), function() use ($request, $user) {
-            // Получаем треки с пользователями (для проверки избранного)
-            $tracks = $this->musicFilters
-                ->apply($request, Music::query())
-                ->with(['users' => function($query) use ($user) {
-                    $query->where('user_id', $user->id);
-                }])
-                ->paginate(self::PER_PAGE)
-                ->withQueryString();
 
-            // Получаем ID избранных треков для быстрой проверки
-            $favoriteIds = $user->musics()->pluck('music_id')->toArray();
 
-            return [
-                'tracks' => $tracks,
-                'favoriteIds' => $favoriteIds,
-                'user' => $user,
-                'genres' => MusicGenre::options(),
-                'pageTitle' => 'All Music',
-            ];
-        });
-
-        return view('music.index', $data);
+        return view('music.index', [
+            'tracks' => $this->cacheService
+                ->paginateCache(
+                    $request,
+                    $filtersString,
+                    new Music()
+                ),
+            'user' => $user,
+            'genres' => MusicGenre::options(),
+            'pageTitle' => 'All Musics',
+        ]);
     }
 
     public function create(): View
@@ -68,7 +63,7 @@ class MusicController extends Controller
     {
         $user = Auth::user();
         $page = $request->get('page', 1);
-        $filtersString = implode(',',$request->all() ?? '').$user->id;
+        $filtersString = implode(',', $request->all() ?? '') . $user->id;
 
         $user->musics()->toggle($music->id);
         Cache::forget(
@@ -135,7 +130,7 @@ class MusicController extends Controller
         $music = Music::query()->findOrFail($request->track_id);
         $music->plays += 1;
         $music->save();
-        Cache::put('music_'. $music->id, $music, 120);
+        Cache::put('music_' . $music->id, $music, 120);
         return response()->json(['plays' => $music->plays,
             'status' => 'success',]);
     }
