@@ -7,6 +7,7 @@ use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Web\UserController;
 use App\Http\Controllers\Web\BookController;
 use App\Http\Middleware\CheckAdmin;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 
@@ -49,6 +50,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('users', UserController::class)->only(['index', 'show']);
     Route::resource('books', BookController::class)->only(['index', 'show']);
+
+    //COMMENTS CONTROLLER
 
 
     //FAVORITE CONTROLLER

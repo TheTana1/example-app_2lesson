@@ -3,11 +3,13 @@
 namespace App\Models;
 
 use App\MusicGenre;
+use Illuminate\Container\Attributes\Tag;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Carbon;
 
 class Music extends Model
@@ -55,7 +57,10 @@ class Music extends Model
     }
 
 
-
+    public function comments():MorphToMany
+    {
+        return $this->morphToMany(Comment::class, 'commentable');
+    }
 
 }
 

@@ -20,8 +20,11 @@ class CacheService
     {
     }
 
+    public function userCache()
+    {
+    }
     public function paginateCache(
-        $request, string $key, Model $model):mixed
+        $request, string $key, Model $model): mixed
     {
         return Cache::remember($key,
             now()->addMinutes(10),
@@ -34,8 +37,19 @@ class CacheService
                 ->withQueryString());
 
 
+    }
 
+    public function singleCache(string $key, Model $model): mixed
+    {
+        return Cache::remember($key,
+            now()->addMinutes(10),
+            fn()=>$model);
+    }
 
-}
+    public function forgetCache(string $key): bool
+    {
+        return Cache::forget($key);
+    }
+
 
 }

@@ -2,18 +2,27 @@
 
 namespace Database\Seeders;
 
+use App\Models\Comment;
 use App\Models\Music;
+use App\Models\Role;
 use App\Models\User;
 use App\MusicGenre;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class MusicSeeder extends Seeder
 {
     public function run(): void
     {
+
+
         $user = User::query()->where('email', 'admin@mail.ru')->firstOrFail();
+        $users = User::query()
+            ->where('role_id', Role::query()
+                ->where('slug', 'user')->firstOrFail()->id
+            )->get()->toArray();
 
         $musics = [
             [
@@ -71,13 +80,23 @@ class MusicSeeder extends Seeder
         ];
 
         foreach ($musics as $music) {
-
+            $randInt = random_int(1,count($users));
             $music['file_path'] = $this->fileMv($music['file_path'], 'music');
             $music['cover_path'] = $this->fileMv($music['cover_path'], 'cover');
             $music = Music::query()->firstOrCreate([
                 'title' => $music['title'],
                 'genre' => $music['genre'],
             ], $music);
+
+            for ($i=0; $i < $randInt; $i++)
+            {
+                $comment = new Comment([
+                    'user_id' => $users[$i]['id'],
+                    'comment' => Str::random(40),
+                ]);
+                $comment->save();
+                $music ->comments()->attach($comment->id);
+            }
 
             $user->musics()->attach($music->id);
         }
