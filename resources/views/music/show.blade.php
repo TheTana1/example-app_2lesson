@@ -343,16 +343,15 @@
                 </div>
             </div>
         </div>
-        <!-- ========== НОВЫЙ БЛОК: Секция комментариев ========== -->
+        <!-- Секция комментариев -->
         <div class="mt-12">
-            <div
-                class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+            <div class="bg-white dark:bg-gray-800 shadow-xl rounded-xl border border-gray-200 dark:border-gray-700 overflow-hidden">
+
                 <!-- Заголовок секции комментариев -->
                 <div class="p-6 border-b border-gray-200 dark:border-gray-700">
                     <div class="flex items-center justify-between">
                         <h2 class="text-2xl font-bold text-gray-900 dark:text-white flex items-center">
-                            <svg class="w-7 h-7 mr-3 text-indigo-500" fill="none" stroke="currentColor"
-                                 viewBox="0 0 24 24">
+                            <svg class="w-7 h-7 mr-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                       d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
                             </svg>
@@ -377,52 +376,52 @@
                     </div>
                 </div>
 
-                <!-- Форма добавления комментария (только для авторизованных) -->
-                {{--                @auth--}}
-                {{--                    <div class="p-6 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-700">--}}
-                {{--                        <form action="{{ route('comments.store', ['type' => 'music', 'id' => $track->id]) }}"--}}
-                {{--                              method="POST" class="space-y-4">--}}
-                {{--                            @csrf--}}
-                {{--                            <div>--}}
-                {{--                                <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">--}}
-                {{--                                    Оставить комментарий--}}
-                {{--                                </label>--}}
-                {{--                                <textarea--}}
-                {{--                                    name="comment"--}}
-                {{--                                    id="comment"--}}
-                {{--                                    rows="3"--}}
-                {{--                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg--}}
-                {{--                                           bg-white dark:bg-gray-800 text-gray-900 dark:text-white--}}
-                {{--                                           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500--}}
-                {{--                                           placeholder-gray-400 dark:placeholder-gray-500"--}}
-                {{--                                    placeholder="Поделитесь своими мыслями о треке..."--}}
-                {{--                                    required--}}
-                {{--                                ></textarea>--}}
-                {{--                            </div>--}}
-                {{--                            <div class="flex justify-end">--}}
-                {{--                                <button type="submit"--}}
-                {{--                                        class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700--}}
-                {{--                                               text-white font-medium rounded-lg transition-colors shadow-md--}}
-                {{--                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">--}}
-                {{--                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">--}}
-                {{--                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"--}}
-                {{--                                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>--}}
-                {{--                                    </svg>--}}
-                {{--                                    Отправить комментарий--}}
-                {{--                                </button>--}}
-                {{--                            </div>--}}
-                {{--                        </form>--}}
-                {{--                    </div>--}}
-                {{--                @else--}}
-                {{--                    <div class="p-6 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-700 text-center">--}}
-                {{--                        <p class="text-gray-600 dark:text-gray-400">--}}
-                {{--                            Чтобы оставить комментарий,--}}
-                {{--                            <a href="{{ route('login') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">--}}
-                {{--                                войдите в систему--}}
-                {{--                            </a>--}}
-                {{--                        </p>--}}
-                {{--                    </div>--}}
-                {{--                @endauth--}}
+                <!-- Форма добавления комментария -->
+                @auth
+                    <div class="p-6 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-700">
+                        <form action="{{ route('comments.store', ['type' => 'music', 'id' => $track->id]) }}"
+                              method="POST" class="space-y-4">
+                            @csrf
+                            <div>
+                                <label for="comment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    Оставить комментарий
+                                </label>
+                                <textarea
+                                    name="comment"
+                                    id="comment"
+                                    rows="3"
+                                    class="w-full px-4 py-3 border border-gray-300 dark:border-gray-600 rounded-lg
+                                           bg-white dark:bg-gray-800 text-gray-900 dark:text-white
+                                           focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                           placeholder-gray-400 dark:placeholder-gray-500"
+                                    placeholder="Поделитесь своими мыслями о треке..."
+                                    required
+                                ></textarea>
+                            </div>
+                            <div class="flex justify-end">
+                                <button type="submit"
+                                        class="inline-flex items-center px-6 py-3 bg-indigo-600 hover:bg-indigo-700
+                                               text-white font-medium rounded-lg transition-colors shadow-md
+                                               focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                              d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                    </svg>
+                                    Отправить комментарий
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                @else
+                    <div class="p-6 bg-gray-50 dark:bg-gray-700/30 border-b border-gray-200 dark:border-gray-700 text-center">
+                        <p class="text-gray-600 dark:text-gray-400">
+                            Чтобы оставить комментарий,
+                            <a href="{{ route('login') }}" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">
+                                войдите в систему
+                            </a>
+                        </p>
+                    </div>
+                @endauth
 
                 <!-- Список комментариев -->
                 <div class="divide-y divide-gray-200 dark:divide-gray-700">
@@ -444,7 +443,6 @@
                                         </div>
                                     @endif
                                 </div>
-                                F
 
                                 <!-- Контент комментария -->
                                 <div class="flex-1 min-w-0">
@@ -464,35 +462,33 @@
                                             </span>
                                         </div>
 
-                                        <!-- Кнопки действий для автора комментария или админа -->
+                                        <!-- Кнопки действий -->
                                         @auth
                                             @if(Auth::id() === $comment->user_id || Auth::user()->is_admin)
                                                 <div class="flex items-center space-x-2">
-                                                    <button onclick="editComment({{ $comment->id }})"
-                                                            class="p-1 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400
-                                                                   transition-colors"
+                                                    <!-- Кнопка редактирования -->
+                                                    <button type="button"
+                                                            onclick="showEditForm({{ $comment->id }})"
+                                                            class="p-1 text-gray-400 hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
                                                             title="Редактировать">
-                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                             viewBox="0 0 24 24">
-                                                            <path stroke-linecap="round" stroke-linejoin="round"
-                                                                  stroke-width="2"
+                                                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                   d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
                                                         </svg>
                                                     </button>
-                                                    <form action="{{ route('comments.destroy', $comment->id) }}"
+
+                                                    <!-- Форма удаления -->
+                                                    <form action="{{ route('comments.destroy',['type' => 'music', 'id' => $track->id, $comment->id]) }}"
                                                           method="POST"
                                                           onsubmit="return confirm('Удалить комментарий?')"
                                                           class="inline">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button type="submit"
-                                                                class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400
-                                                                       transition-colors"
+                                                                class="p-1 text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors"
                                                                 title="Удалить">
-                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor"
-                                                                 viewBox="0 0 24 24">
-                                                                <path stroke-linecap="round" stroke-linejoin="round"
-                                                                      stroke-width="2"
+                                                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                                                       d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
                                                             </svg>
                                                         </button>
@@ -502,10 +498,40 @@
                                         @endauth
                                     </div>
 
-                                    <!-- Текст комментария -->
-                                    <div class="prose prose-sm max-w-none text-gray-700 dark:text-gray-300 mb-3">
+                                    <!-- Текст комментария (отображается по умолчанию) -->
+                                    <div id="comment-text-{{ $comment->id }}" class="prose prose-sm max-w-none text-gray-700 dark:text-gray-300 mb-3">
                                         {{ $comment->comment }}
                                     </div>
+
+                                    <!-- Форма редактирования (скрыта по умолчанию) -->
+                                    @auth
+                                        @if(Auth::id() === $comment->user_id || Auth::user()->is_admin)
+                                            <div id="edit-form-{{ $comment->id }}" class="hidden mt-2">
+                                                <form action="{{ route('comments.update', ['type' => 'music', 'id' => $track->id, $comment->id]) }}" method="POST">
+                                                    @csrf
+                                                    @method('PUT')
+                                                    <textarea
+                                                        name="comment"
+                                                        rows="3"
+                                                        class="w-full px-3 py-2 text-sm border border-gray-300 dark:border-gray-600 rounded-lg
+                                                               focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500
+                                                               bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                                        required>{{ $comment->comment }}</textarea>
+                                                    <div class="flex space-x-2 mt-2">
+                                                        <button type="submit"
+                                                                class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                                            Сохранить
+                                                        </button>
+                                                        <button type="button"
+                                                                onclick="hideEditForm({{ $comment->id }})"
+                                                                class="px-3 py-1 text-sm bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500">
+                                                            Отмена
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        @endif
+                                    @endauth
 
                                     <!-- Кнопки взаимодействия -->
                                     <div class="flex items-center space-x-4 mt-2">
@@ -522,9 +548,8 @@
                                         </button>
 
                                         <!-- Ответить -->
-                                        <button
-                                            onclick="replyToComment({{ $comment->id }}, '{{ $comment->user->name ?? 'Пользователь' }}')"
-                                            class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600
+                                        <button onclick="showReplyForm({{ $comment->id }}, '{{ $comment->user->name ?? 'Пользователь' }}')"
+                                                class="flex items-center space-x-1 text-gray-500 hover:text-indigo-600
                                                        dark:text-gray-400 dark:hover:text-indigo-400 transition-colors">
                                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -534,12 +559,35 @@
                                         </button>
                                     </div>
 
-                                    <!-- Вложенные ответы (если есть) -->
+                                    <!-- Форма ответа (скрыта) -->
+                                    <div id="reply-form-{{ $comment->id }}" class="hidden mt-3">
+                                        <form action="{{ route('comments.store', ['type' => 'music', 'id' => $track->id]) }}"
+                                              method="POST" class="space-y-2">
+                                            @csrf
+                                            <input type="hidden" name="parent_id" value="{{ $comment->id }}">
+                                            <textarea name="comment" rows="2"
+                                                      class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg
+                                                             focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                                                      placeholder="Ответить {{ $comment->user->name ?? 'Пользователь' }}..."
+                                                      required></textarea>
+                                            <div class="flex justify-end space-x-2">
+                                                <button type="button"
+                                                        onclick="hideReplyForm({{ $comment->id }})"
+                                                        class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
+                                                    Отмена
+                                                </button>
+                                                <button type="submit"
+                                                        class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                                                    Ответить
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- Вложенные ответы -->
                                     @if($comment->replies && $comment->replies->count() > 0)
-                                        <div
-                                            class="mt-4 ml-6 pl-4 border-l-2 border-indigo-200 dark:border-indigo-800 space-y-4">
+                                        <div class="mt-4 ml-6 pl-4 border-l-2 border-indigo-200 dark:border-indigo-800 space-y-4">
                                             @foreach($comment->replies as $reply)
-                                                <!-- Аналогичная структура для ответов -->
                                                 <div class="flex space-x-3">
                                                     <div class="flex-shrink-0">
                                                         @if($reply->user && $reply->user->avatar)
@@ -549,14 +597,13 @@
                                                         @else
                                                             <div class="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500
                                                                         flex items-center justify-center text-white font-bold text-sm">
-                                                                {{ strtoupper(substr($reply->user->name ?? 'Г', 0, 1)) }}
+                                                                {{ mb_strtoupper(mb_substr($reply->user->name ?? 'Г', 0, 1)) }}
                                                             </div>
                                                         @endif
                                                     </div>
                                                     <div class="flex-1">
                                                         <div class="flex items-center space-x-2 mb-1">
-                                                            <span
-                                                                class="font-medium text-gray-900 dark:text-white text-sm">
+                                                            <span class="font-medium text-gray-900 dark:text-white text-sm">
                                                                 {{ $reply->user->name ?? 'Пользователь' }}
                                                             </span>
                                                             <span class="text-xs text-gray-500 dark:text-gray-400">
@@ -604,61 +651,91 @@
         </div>
     </div>
 
-
-
     <!-- Скрипты для комментариев -->
     <script>
-        function editComment(commentId) {
-            // Реализация редактирования комментария
-            alert('Редактирование комментария ' + commentId);
+        // Функции для редактирования
+        function showEditForm(commentId) {
+            // Скрываем текст комментария
+            document.getElementById('comment-text-' + commentId).style.display = 'none';
+            // Показываем форму редактирования
+            document.getElementById('edit-form-' + commentId).classList.remove('hidden');
         }
 
+        function hideEditForm(commentId) {
+            // Показываем текст комментария
+            document.getElementById('comment-text-' + commentId).style.display = 'block';
+            // Скрываем форму редактирования
+            document.getElementById('edit-form-' + commentId).classList.add('hidden');
+        }
+
+        // Функции для ответов
+        function showReplyForm(commentId, username) {
+            const replyForm = document.getElementById('reply-form-' + commentId);
+            replyForm.classList.remove('hidden');
+        }
+
+        function hideReplyForm(commentId) {
+            const replyForm = document.getElementById('reply-form-' + commentId);
+            replyForm.classList.add('hidden');
+        }
+
+        // Функция для лайков
         function likeComment(commentId) {
-            // Реализация лайка комментария
             fetch(`/comments/${commentId}/like`, {
                 method: 'POST',
                 headers: {
                     'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                    'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 }
             })
                 .then(response => response.json())
                 .then(data => {
-                    // Обновление счетчика лайков
                     if (data.success) {
-                        // Обновляем UI
+                        // Обновляем счетчик лайков
+                        const likeButton = event.currentTarget;
+                        const likeCount = likeButton.querySelector('span');
+                        likeCount.textContent = data.likes_count;
+
+                        // Меняем цвет иконки
+                        const likeIcon = likeButton.querySelector('svg');
+                        if (data.liked) {
+                            likeIcon.classList.add('text-red-500');
+                            likeIcon.classList.remove('text-gray-500');
+                        } else {
+                            likeIcon.classList.remove('text-red-500');
+                            likeIcon.classList.add('text-gray-500');
+                        }
                     }
-                });
+                })
+                .catch(error => console.error('Error:', error));
         }
 
-        function replyToComment(commentId, username) {
-            const replyForm = document.createElement('div');
-            replyForm.innerHTML = `
-                <div class="mt-4 ml-12">
-                    <form action="/comments/${commentId}/reply" method="POST" class="space-y-2">
-                        @csrf
-            <textarea name="comment" rows="2"
-                      class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg
-                             focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                      placeholder="Ответить ${username}..."></textarea>
-                        <div class="flex justify-end space-x-2">
-                            <button type="button" onclick="this.closest('div').remove()"
-                                    class="px-3 py-1 text-sm text-gray-600 hover:text-gray-800">
-                                Отмена
-                            </button>
-                            <button type="submit"
-                                    class="px-3 py-1 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
-                                Ответить
-                            </button>
-                        </div>
-                    </form>
-                </div>
-            `;
+        // Показываем уведомления об успехе/ошибке
+        @if(session('success'))
+        showNotification('{{ session('success') }}', 'success');
+        @endif
 
-            const commentElement = document.getElementById(`comment-${commentId}`);
-            commentElement.appendChild(replyForm.firstChild);
+        @if(session('error'))
+        showNotification('{{ session('error') }}', 'error');
+        @endif
+
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 px-6 py-3 rounded-lg text-white
+                                      ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}
+                                      shadow-lg z-50 transition-opacity duration-300`;
+            notification.textContent = message;
+
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.opacity = '0';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
     </script>
+
     <!-- Скрипт для отслеживания прослушиваний -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -676,7 +753,6 @@
 
                 if (!duration || duration <= 0 || !isFinite(duration)) return;
 
-                // Отправляем запрос при достижении 70%
                 const seventyPercent = duration * 0.7;
 
                 if (currentTime >= seventyPercent) {
@@ -698,7 +774,6 @@
                         .then(response => response.json())
                         .then(data => {
                             if (data.plays) {
-                                // Обновляем счетчик прослушиваний на странице
                                 const playsElements = document.querySelectorAll('.plays-count');
                                 playsElements.forEach(el => {
                                     el.textContent = data.plays.toLocaleString();

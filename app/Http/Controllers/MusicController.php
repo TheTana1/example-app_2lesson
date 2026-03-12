@@ -76,7 +76,7 @@ class MusicController extends Controller
     public function show(Music $music): View
     {
 
-        $comments = $music->comments()->with(['user.avatar'])->paginate(10);
+        $comments = $music->comments()->orderByDesc('id')->with(['user.avatar'])->paginate(10);
         return view('music.show', [
             'track' => $this->cacheService
                 ->singleCache('music_'.$music->id, $music),

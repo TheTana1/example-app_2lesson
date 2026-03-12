@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FavoriteController;
 use App\Http\Controllers\MusicController;
@@ -52,7 +53,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('books', BookController::class)->only(['index', 'show']);
 
     //COMMENTS CONTROLLER
-
+    Route::prefix('comments')->name('comments.')->group(function () {
+        Route::post('/{type}/{id}', [CommentController::class, 'store'])->name('store');
+        // Другие маршруты для комментариев
+        Route::delete('/{comment}', [CommentController::class, 'destroy'])->name('destroy');
+        Route::put('/{comment}', [CommentController::class, 'update'])->name('update');
+    });
 
     //FAVORITE CONTROLLER
     Route::get('favorites', [FavoriteController::class, 'index'])->name('favorites.index');
